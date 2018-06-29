@@ -7,7 +7,6 @@ import initializeRP
 import takeData
 import analyzeData
 import updateFeedback
-import matplotlib.pyplot as plt
 import updateDisplay
 
 def main(ip, param_file='laser_locking_parameters.txt'):
@@ -40,12 +39,12 @@ def main(ip, param_file='laser_locking_parameters.txt'):
 				# Update feedback
 				updateFeedback.main(redpitaya)
 
-				plt.plot(redpitaya.time_scale, redpitaya.data[0]);
-				plt.plot(redpitaya.time_scale, redpitaya.data[1]);
-				plt.plot(redpitaya.time_scale, analyzeData.gaussian(redpitaya.time_scale,*redpitaya.fit_params[0]));
-				plt.plot(redpitaya.time_scale, analyzeData.gaussian(redpitaya.time_scale,*redpitaya.fit_params[1]));
-				plt.show()
-				plt.show()
+				#plt.plot(redpitaya.time_scale, redpitaya.data[0]);
+				#plt.plot(redpitaya.time_scale, redpitaya.data[1]);
+				#plt.plot(redpitaya.time_scale, analyzeData.gaussian(redpitaya.time_scale,*redpitaya.fit_params[0]));
+				#plt.plot(redpitaya.time_scale, analyzeData.gaussian(redpitaya.time_scale,*redpitaya.fit_params[1]));
+				#plt.show()
+				#plt.show()
 
 				# Update display
 				updateDisplay.main(redpitaya, figure)
