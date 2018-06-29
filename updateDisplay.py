@@ -10,10 +10,10 @@ def main(redpitaya, fig):
 	for ch in {1,2}:
 		fit = convertFitToData(redpitaya.time_scale, redpitaya.fit_params[ch-1])
 		updateTransmissionData(axes[ch-1],redpitaya.data[ch-1],fit)
-	updateErrorData(axes[-1],redpitaya.error)
+	max_error = redpitaya.buff_time_ms
+	updateErrorData(axes[-1],redpitaya.error/max_error)
 	fig.canvas.draw()
 	fig.canvas.flush_events()
-	print('I was suppoed to draw something')
 
 
 
@@ -33,7 +33,6 @@ def initialize3Plots(redpitaya):
 	line_error = error_ax.plot(error_xdata,error_ydata)
 	fig.canvas.draw()
 	fig.canvas.flush_events()
-	print('Do you see my drawing?')
 	return fig
 
 def closeAll():
