@@ -5,13 +5,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 
-def main(redpitaya, figure):
-	axes = figure.axes
+def main(redpitaya, fig):
+	axes = fig.axes
 	for ch in {1,2}:
 		fit = convertFitToData(redpitaya.time_scale, redpitaya.fit_params[ch-1])
 		updateTransmissionData(axes[ch-1],redpitaya.data[ch-1],fit)
 	updateErrorData(axes[-1],redpitaya.error)
-	figure.canvas.draw()
+	fig.canvas.draw()
 	fig.canvas.flush_events()
 
 
