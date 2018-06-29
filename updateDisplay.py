@@ -1,6 +1,6 @@
 # updateDisplay.py
 import matplotlib
-matplotlib.use('TkAgg')
+matplotlib.use('nbagg')
 import matplotlib.pyplot as plt
 import numpy as np
 import time
@@ -13,6 +13,7 @@ def main(redpitaya, fig):
 	updateErrorData(axes[-1],redpitaya.error)
 	fig.canvas.draw()
 	fig.canvas.flush_events()
+	print('I was suppoed to draw something')
 
 
 
@@ -32,6 +33,7 @@ def initialize3Plots(redpitaya):
 	line_error = error_ax.plot(error_xdata,error_ydata)
 	fig.canvas.draw()
 	fig.canvas.flush_events()
+	print('Do you see my drawing?')
 	return fig
 
 def closeAll():
@@ -43,6 +45,7 @@ def updateTransmissionData(axis, data, fit_data):
 	line_fit = lines[1]
 	line_data.set_ydata(data)
 	line_fit.set_ydata(fit_data)
+	axis.relim(True)
 	axis.autoscale_view(True, True, True)
 
 def updateErrorData(axis,data):
