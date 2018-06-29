@@ -8,7 +8,7 @@ import takeData
 import analyzeData
 import updateFeedback
 import matplotlib.pyplot as plt
-# import updateDisplay
+import updateDisplay
 
 def main(ip, param_file='laser_locking_parameters.txt'):
 	# Start/open communitation channel to Red Pitaya
@@ -16,7 +16,7 @@ def main(ip, param_file='laser_locking_parameters.txt'):
 	redpitaya = initializeRP.main(ip, param_file)
 
 	# Initialize plotting
-	# figure = updateDisplay.initialize3Plots(redpitaya)
+	figure = updateDisplay.initialize3Plots(redpitaya)
 
 	# Start output at zero.
 	redpitaya.enableOutput(1)
@@ -46,8 +46,9 @@ def main(ip, param_file='laser_locking_parameters.txt'):
 				plt.plot(redpitaya.time_scale, analyzeData.gaussian(redpitaya.time_scale,*redpitaya.fit_params[1]));
 				plt.show()
 				plt.show()
+
 				# Update display
-				#updateDisplay.main(redpitaya, figure)
+				updateDisplay.main(redpitaya, figure)
 
 				# Timing
 				i+=1
@@ -67,7 +68,7 @@ def main(ip, param_file='laser_locking_parameters.txt'):
 	except KeyboardInterrupt:
 		stopRP(redpitaya)
 		redpitaya.closeConnection()
-		# updateDisplay.closeAll()
+		updateDisplay.closeAll()
 		print('Program stopped.')
 		print('Average loop time was {} seconds.'.format(avg_loop_time/i))
 		pass

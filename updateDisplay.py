@@ -1,4 +1,6 @@
 # updateDisplay.py
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
 import time
@@ -9,9 +11,8 @@ def main(redpitaya, figure):
 		fit = convertFitToData(redpitaya.time_scale, redpitaya.fit_params[ch-1])
 		updateTransmissionData(axes[ch-1],redpitaya.data[ch-1],fit)
 	updateErrorData(axes[-1],redpitaya.error)
-
 	figure.canvas.draw()
-	time.sleep(0.00001)
+	fig.canvas.flush_events()
 
 
 
@@ -30,6 +31,7 @@ def initialize3Plots(redpitaya):
 	line_unstable_fit, = unstable_ax.plot(time_xdata, zero_ydata)
 	line_error = error_ax.plot(error_xdata,error_ydata)
 	fig.canvas.draw()
+	fig.canvas.flush_events()
 	return fig
 
 def closeAll():
