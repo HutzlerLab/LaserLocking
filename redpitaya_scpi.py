@@ -181,7 +181,7 @@ class SCPI (object):
     def startAcq(self):
         self.tx_txt('ACQ:START')
 
-    def getRawData(self, channel):
+    def getAllRawData(self, channel):
         raw_data = self.txrx_txt('ACQ:SOUR{}:DATA?'.format(channel))
         return raw_data
 
@@ -412,6 +412,7 @@ class RedPitaya:
         desired_dec = int(2**(math.ceil(math.log2(sample_time/(131.072 * 10**-3)))))
         dec_list = [1,8,64,1024,8192,65536]
         if any(desired_dec != dec for dec in dec_list):
+            dec_list = [x for x in dec_list if x > desired_dec]
             actual_dec = min(dec_list, key=lambda x:abs(x-desired_dec))
         else:
             actual_dec = desired_dec
@@ -519,8 +520,8 @@ class RedPitaya:
         if bad == False:
             self.data_format = data_format
 
-    def getRawData(self, channel):
-        raw_data = self.scpi.getRawData(channel)
+    def getAllRawData(self, channel):
+        raw_data = self.scpi.getAllRawData(channel)
         return raw_data
  
     def processASCIIDataVolts(self, raw_data):
@@ -531,7 +532,7 @@ class RedPitaya:
 
     def getProcessedData(self,channel):
         self.scpi.turnOnLED(6)
-        raw_data = self.getRawData(channel)
+        raw_data = self.getAllRawData(channel)
 
         if self.data_format=='ASCII' and self.data_units=='VOLTS':
             data_array = self.processASCIIDataVolts(raw_data)

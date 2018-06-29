@@ -7,11 +7,16 @@ import time
 
 def main(redpitaya, fig):
 	axes = fig.axes
+	xscale = redpitaya.time_scale
 	for ch in {1,2}:
-		fit = convertFitToData(redpitaya.time_scale, redpitaya.fit_params[ch-1])
-		updateTransmissionData(axes[ch-1],redpitaya.data[ch-1],fit)
-	max_error = redpitaya.buff_time_ms
-	updateErrorData(axes[-1],redpitaya.error/max_error)
+		fit_params = redpitaya.fit_params[ch-1]
+		axis = axes[ch-1]
+		cavity_data = redpitaya.data[ch-1]
+		fit_gaussian = convertFitToData(xscale, fit_params)
+		updateCavityData(axis, cavity_data, fit_gaussian)
+
+	updateErrorData(axes[-1],redpitaya.error)
+
 	fig.canvas.draw()
 	fig.canvas.flush_events()
 
@@ -19,18 +24,34 @@ def main(redpitaya, fig):
 
 def initialize3Plots(redpitaya):
 	fig = plt.figure()
-	stable_ax = fig.add_subplot(3,1,redpitaya.stable_channel)
-	unstable_ax = fig.add_subplot(3,1,redpitaya.unstable_channel)
-	error_ax = fig.add_subplot(313)
+
 	time_xdata = redpitaya.time_scale
 	zero_ydata = np.zeros(redpitaya.buff_size)
 	error_xdata = []
 	error_ydata = []
-	line_stable_data, = stable_ax.plot(time_xdata, zero_ydata)
-	line_stable_fit, = stable_ax.plot(time_xdata, zero_ydata)
-	line_unstable_data, = unstable_ax.plot(time_xdata, zero_ydata)
-	line_unstable_fit, = unstable_ax.plot(time_xdata, zero_ydata)
-	line_error = error_ax.plot(error_xdata,error_ydata)
+
+	stable_ax = fig.add_subplot(3,1,redpitaya.stable_channel)
+	stable_ax.set_xlabel('Time (ms)')
+	stable_ax.set_ylabel('Photodiode Voltage (V)')
+	stable_ax.set_title('Stable Laser')
+	line_stable_fit, = stable_ax.plot(time_xdata, zero_ydata,'--',label='Fit')
+	line_stable_data, = stable_ax.plot(time_xdata, zero_ydata,label='Stable')
+	stable_ax.legend()
+
+	unstable_ax = fig.add_subplot(3,1,redpitaya.unstable_channel)
+	unstable_ax.set_xlabel('Time (ms)')
+	unstable_ax.set_ylabel('Photodiode Voltage (V)')
+	unstable_ax.set_title('Unstable Laser')
+	line_unstable_fit, = unstable_ax.plot(time_xdata, zero_ydata,'--',label='Fit')
+	line_unstable_data, = unstable_ax.plot(time_xdata, zero_ydata,label='Unstable')
+	unstable_ax.legend()
+
+	error_ax = fig.add_subplot(313)
+	error_ax.set_xlabel('Time (ms)')
+	error_ax.set_ylabel('Error Signal (V)')
+	error_ax.set_title('Error')
+	line_error, = error_ax.plot(error_xdata,error_ydata)
+
 	fig.canvas.draw()
 	fig.canvas.flush_events()
 	return fig
@@ -38,7 +59,7 @@ def initialize3Plots(redpitaya):
 def closeAll():
 	plt.close('all')
 
-def updateTransmissionData(axis, data, fit_data):
+def updateCavityData(axis, data, fit_data):
 	lines = axis.get_lines()
 	line_data = lines[0]
 	line_fit = lines[1]

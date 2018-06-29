@@ -25,7 +25,9 @@ def calculateError(redpitaya):
 	mean_stable = getMean(redpitaya.fit_params[redpitaya.stable_channel - 1])
 	mean_unstable = getMean(redpitaya.fit_params[redpitaya.unstable_channel - 1])
 	error = mean_stable - mean_unstable
-	return error
+	max_error = redpitaya.buff_time_ms
+	scaled_error = error/max_error
+	return scaled_error
 
 def analyzeSingleChannel(redpitaya, channel):
 	guess = makeGuess(redpitaya, redpitaya.data[channel-1])
