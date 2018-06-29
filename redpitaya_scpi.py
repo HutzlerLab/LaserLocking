@@ -185,6 +185,14 @@ class SCPI (object):
         raw_data = self.txrx_txt('ACQ:SOUR{}:DATA?'.format(channel))
         return raw_data
 
+    def getLateRawData(self, channel, samples):
+        raw_data = self.txrx_txt('ACQ:SOUR{}:DATA:LAT:N? {}'.format(channel,samples))
+        return raw_data
+
+    def getEarlyRawData(self,channel, samples):
+        raw_data = self.txrx_txt('ACQ:SOUR{}:DATA:OLD:N? {}'.format(channel,samples))
+        return raw_data
+
 # Custom Output Commands
 
     def enableOutput(self, channel):
@@ -366,6 +374,7 @@ class RedPitaya:
         self.stable_channel = None
         self.unstable_channel = None
         self.feedback_channel = None
+        self.ramp_time = 0
 
     # Output attributes
         self.feeedback_waveform = None
@@ -382,6 +391,10 @@ class RedPitaya:
     @property
     def time_scale(self):
         return np.linspace(0,self.buff_time_ms,self.buff_size)
+
+    @property
+    def ramp_samples(self):
+        return int(self.ramp_time/self.buff_time_ms*self.buff_size)
     
 
 # General commands
@@ -526,19 +539,35 @@ class RedPitaya:
  
     def processASCIIDataVolts(self, raw_data):
         stripped_data = raw_data.strip('{}\n\r').replace("  ", "").split(',')
-        data_array = np.fromiter(stripped_data, float, self.buff_size)
+        data_array = np.fromiter(stripped_data, float)
         # alternatives: map(float, buff_string) or np.array(list(map(float,buff_string))) or can try np.fromiter(map(float,buff_string))
         return data_array
 
-    def getProcessedData(self,channel):
+    def getAllProcessedData(self,channel):
         self.scpi.turnOnLED(6)
         raw_data = self.getAllRawData(channel)
-
         if self.data_format=='ASCII' and self.data_units=='VOLTS':
             data_array = self.processASCIIDataVolts(raw_data)
         self.scpi.turnOffLED(6)
         return data_array
 
+    def getLateProcessedData(self,channel):
+        self.scpi.turnOnLED(6)
+        samples = self.ramp_samples
+        raw_data = self.getLateRawData(channel, samples)
+        if self.data_format=='ASCII' and self.data_units=='VOLTS':
+            data_array = self.processASCIIDataVolts(raw_data)
+        self.scpi.turnOffLED(6)
+        return data_array
+
+    def getEarlyProcessedData(self,channel):
+        self.scpi.turnOnLED(6)
+        samples = self.ramp_samples
+        raw_data = self.getEarlyRawData(channel, samples)
+        if self.data_format=='ASCII' and self.data_units=='VOLTS':
+            data_array = self.processASCIIDataVolts(raw_data)
+        self.scpi.turnOffLED(6)
+        return data_array
 
 # Output commands
 
