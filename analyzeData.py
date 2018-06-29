@@ -10,7 +10,11 @@ def gaussian(x,a,b,n):
 	return n*np.exp(-(x-b)**2/(2*a))
 
 def fitGaussian(xscale, data, guess):
-	popt, pcov = curve_fit(gaussian, xscale, data, guess) #bounds=([0,-3*length,0],[3*length**2,3*length,10]))
+	try:
+		popt, pcov = curve_fit(gaussian, xscale, data, guess) #bounds=([0,-3*length,0],[3*length**2,3*length,10]))
+	except RuntimeError:
+    	print("Error - curve_fit failed")
+    	popt, pcov = [],[]
 	return [popt,pcov]
 
 def getMean(single_fit_params):
