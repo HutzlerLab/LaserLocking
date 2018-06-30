@@ -68,9 +68,11 @@ def setParameters(redpitaya, parameters):
 	feedback_waveform = parameters[12]
 	redpitaya.setOutputWaveform(redpitaya.feedback_channel, feedback_waveform)
 
+	ramp_freq_Hz = float(parameters[13])
+	redpitaya.ramp_time_ms = 10**3 * 1/ramp_freq_Hz
+
 	initial_amplitude = 0
 	redpitaya.setOutputAmplitude(redpitaya.feedback_channel, initial_amplitude)
-
 
 if __name__ == '__main__':
 	main(args.ip)

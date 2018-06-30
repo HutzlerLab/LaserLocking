@@ -50,27 +50,34 @@ class SCPI (object):
                 break
         return msg[:-2]
 
+
+    #NOT WORKING
     def rx_arb(self):
         numOfBytes = 0
         """ Recieve binary data from scpi server"""
         str=''
         while (len(str) != 1):
-            str = (self._socket.recv(1))
+            str = (self._socket.recv(1)).decode()
+        #print(str)
         if not (str == '#'):
             return False
+        #print(str)
         str=''
         while (len(str) != 1):
-            str = (self._socket.recv(1))
+            str = (self._socket.recv(1)).decode()
+        #print(str)
         numOfNumBytes = int(str)
         if not (numOfNumBytes > 0):
             return False
         str=''
         while (len(str) != numOfNumBytes):
-            str += (self._socket.recv(1))
+            str += (self._socket.recv(1)).decode()
+        #print(str)
         numOfBytes = int(str)
         str=''
         while (len(str) != numOfBytes):
-            str += (self._socket.recv(1))
+            str += (self._socket.recv(1)).decode('utf-8','replace')
+        #print(str)
         return str
 
     def tx_txt(self, msg):
@@ -374,7 +381,7 @@ class RedPitaya:
         self.stable_channel = None
         self.unstable_channel = None
         self.feedback_channel = None
-        self.ramp_time = 0
+        self.ramp_time_ms = 0
 
     # Output attributes
         self.feeedback_waveform = None
@@ -394,7 +401,7 @@ class RedPitaya:
 
     @property
     def ramp_samples(self):
-        return int(self.ramp_time/self.buff_time_ms*self.buff_size)
+        return int(self.ramp_time_ms/self.buff_time_ms*self.buff_size)
     
 
 # General commands

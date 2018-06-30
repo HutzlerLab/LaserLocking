@@ -13,8 +13,8 @@ def fitGaussian(xscale, data, guess):
 	try:
 		popt, pcov = curve_fit(gaussian, xscale, data, guess) #bounds=([0,-3*length,0],[3*length**2,3*length,10]))
 	except RuntimeError:
-    	print("Error - curve_fit failed")
-    	popt, pcov = [],[]
+		print("Error - curve_fit failed")
+		popt, pcov = [],[]
 	return [popt,pcov]
 
 def getMean(single_fit_params):

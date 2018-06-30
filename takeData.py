@@ -18,7 +18,7 @@ def readBothChannels(redpitaya):
 
 
 def readSingleChannel(redpitaya,channel):
-	single_data = redpitaya.getAllProcessedData(channel)
+	single_data = redpitaya.getLateProcessedData(channel)
 	return single_data
 
 
