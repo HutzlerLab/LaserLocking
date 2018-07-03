@@ -2,6 +2,7 @@
 
 from redpitaya_scpi import SCPI
 from redpitaya_controller import RedPitaya
+import visa
 import argparse
 
 #parser = argparse.ArgumentParser(description='Initialize red pitaya')
@@ -9,12 +10,20 @@ import argparse
 #args = parser.parse_args()
 
 def main(ip,name='laser_locking_parameters.txt'):
-	scpi = SCPI(ip)
-	redpitaya = RedPitaya(scpi)
+	rp_instrument = openConnection(ip)
+	redpitaya = RedPitaya(rp_instrument)
 	parameters = readFile(name)
 	setParameters(redpitaya, parameters)
 	redpitaya.scpi.flashAllLED()
 	return redpitaya
+
+def openConnection(ip)
+	delimiter = '\r\n'
+	port = 5000
+	rm = visa.ResourceManager('@py')
+	rp_instrument = rm.open_resource('TCPIP::{}::{}::SOCKET'.format(ip, port), read_termination = delimiter)	
+	return rp_instrument
+
 
 def readFile(name):
 	#parameters = {
