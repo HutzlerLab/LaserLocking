@@ -1,6 +1,6 @@
 # updateDisplay.py
 import matplotlib
-matplotlib.use('nbagg')
+matplotlib.use('Tkagg')
 import matplotlib.pyplot as plt
 import numpy as np
 import time

@@ -33,11 +33,10 @@ class SCPI (object):
     #         self._socket.close()
     #     self._socket = None
 
-     def close(self):
-         """Close IP connection."""
-         self.rp.close()
+    def close(self):
+        self.rp.close()
 
-    # def rx_txt(self, chunksize = 4096):
+            # def rx_txt(self, chunksize = 4096):
     #     """Receive text string and return it after removing the delimiter."""
     #     msg = ''
     #     while 1:

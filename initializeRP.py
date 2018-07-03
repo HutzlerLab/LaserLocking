@@ -17,7 +17,7 @@ def main(ip,name='laser_locking_parameters.txt'):
 	redpitaya.scpi.flashAllLED()
 	return redpitaya
 
-def openConnection(ip)
+def openConnection(ip):
 	delimiter = '\r\n'
 	port = 5000
 	rm = visa.ResourceManager('@py')

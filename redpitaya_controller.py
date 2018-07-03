@@ -1,11 +1,12 @@
 import time
 import numpy as np
 from redpitaya_scpi import SCPI
+import math
 
 class RedPitaya:
 
     def __init__(self, instrument):
-    	self.instrument = instrument
+        self.instrument = instrument
         self.scpi = SCPI(instrument)
         self.scpi.disableOutput(1)
         self.scpi.disableOutput(2)
