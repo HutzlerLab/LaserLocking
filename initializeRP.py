@@ -1,5 +1,7 @@
+#initializeRP
+
 from redpitaya_scpi import SCPI
-from redpitaya_scpi import RedPitaya
+from redpitaya_controller import RedPitaya
 import argparse
 
 #parser = argparse.ArgumentParser(description='Initialize red pitaya')

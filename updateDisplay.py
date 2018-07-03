@@ -27,7 +27,7 @@ def initialize3Plots(redpitaya):
 	fig = plt.figure()
 
 	time_xdata = redpitaya.time_scale
-	zero_ydata = np.zeros(redpitaya.buff_size)
+	zero_ydata = np.zeros(redpitaya.ramp_samples)
 	error_xdata = []
 	error_ydata = []
 
