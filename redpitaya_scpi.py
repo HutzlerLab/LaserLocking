@@ -396,12 +396,12 @@ class RedPitaya:
         return self.decimation*131.072 * 10**-3
 
     @property
-    def time_scale(self):
-        return np.linspace(0,self.buff_time_ms,self.buff_size)
-
-    @property
     def ramp_samples(self):
         return int(self.ramp_time_ms/self.buff_time_ms*self.buff_size)
+
+    @property
+    def time_scale(self):
+        return np.linspace(0,self.ramp_time_ms,self.ramp_samples)
     
 
 # General commands
@@ -552,7 +552,7 @@ class RedPitaya:
 
     def getAllProcessedData(self,channel):
         self.scpi.turnOnLED(6)
-        raw_data = self.getAllRawData(channel)
+        raw_data = self.scpi.getAllRawData(channel)
         if self.data_format=='ASCII' and self.data_units=='VOLTS':
             data_array = self.processASCIIDataVolts(raw_data)
         self.scpi.turnOffLED(6)
@@ -561,7 +561,7 @@ class RedPitaya:
     def getLateProcessedData(self,channel):
         self.scpi.turnOnLED(6)
         samples = self.ramp_samples
-        raw_data = self.getLateRawData(channel, samples)
+        raw_data = self.scpi.getLateRawData(channel, samples)
         if self.data_format=='ASCII' and self.data_units=='VOLTS':
             data_array = self.processASCIIDataVolts(raw_data)
         self.scpi.turnOffLED(6)
@@ -570,7 +570,7 @@ class RedPitaya:
     def getEarlyProcessedData(self,channel):
         self.scpi.turnOnLED(6)
         samples = self.ramp_samples
-        raw_data = self.getEarlyRawData(channel, samples)
+        raw_data = self.scpi.getEarlyRawData(channel, samples)
         if self.data_format=='ASCII' and self.data_units=='VOLTS':
             data_array = self.processASCIIDataVolts(raw_data)
         self.scpi.turnOffLED(6)

@@ -18,6 +18,7 @@ def main(redpitaya, fig):
 	updateErrorData(axes[-1],redpitaya.error)
 
 	fig.canvas.draw()
+	plt.tight_layout()
 	fig.canvas.flush_events()
 
 
@@ -32,7 +33,7 @@ def initialize3Plots(redpitaya):
 
 	stable_ax = fig.add_subplot(3,1,redpitaya.stable_channel)
 	stable_ax.set_xlabel('Time (ms)')
-	stable_ax.set_ylabel('Photodiode Voltage (V)')
+	stable_ax.set_ylabel('Input {} (V)'.format(redpitaya.stable_channel))
 	stable_ax.set_title('Stable Laser')
 	line_stable_fit, = stable_ax.plot(time_xdata, zero_ydata,'--',label='Fit')
 	line_stable_data, = stable_ax.plot(time_xdata, zero_ydata,label='Stable')
@@ -40,7 +41,7 @@ def initialize3Plots(redpitaya):
 
 	unstable_ax = fig.add_subplot(3,1,redpitaya.unstable_channel)
 	unstable_ax.set_xlabel('Time (ms)')
-	unstable_ax.set_ylabel('Photodiode Voltage (V)')
+	unstable_ax.set_ylabel('Input {} (V)'.format(redpitaya.unstable_channel))
 	unstable_ax.set_title('Unstable Laser')
 	line_unstable_fit, = unstable_ax.plot(time_xdata, zero_ydata,'--',label='Fit')
 	line_unstable_data, = unstable_ax.plot(time_xdata, zero_ydata,label='Unstable')
@@ -48,11 +49,12 @@ def initialize3Plots(redpitaya):
 
 	error_ax = fig.add_subplot(313)
 	error_ax.set_xlabel('Time (ms)')
-	error_ax.set_ylabel('Error Signal (V)')
+	error_ax.set_ylabel('Output {} (V)'.format(redpitaya.feedback_channel))
 	error_ax.set_title('Error')
 	line_error, = error_ax.plot(error_xdata,error_ydata)
 
 	fig.canvas.draw()
+	plt.tight_layout()
 	fig.canvas.flush_events()
 	return fig
 

@@ -29,7 +29,7 @@ def calculateError(redpitaya):
 	mean_stable = getMean(redpitaya.fit_params[redpitaya.stable_channel - 1])
 	mean_unstable = getMean(redpitaya.fit_params[redpitaya.unstable_channel - 1])
 	error = mean_stable - mean_unstable
-	max_error = redpitaya.buff_time_ms
+	max_error = redpitaya.ramp_time_ms
 	scaled_error = error/max_error
 	return scaled_error
 
@@ -47,7 +47,7 @@ def analyzeBothChannels(redpitaya):
 def makeGuess(redpitaya, data):
 	finesse = 300
 	max_guess = np.amax(data)
-	mean_guess = np.argmax(data)/redpitaya.buff_size*redpitaya.buff_time_ms
-	var_guess = (redpitaya.buff_time_ms/finesse)**2
+	mean_guess = np.argmax(data)/redpitaya.ramp_samples*redpitaya.ramp_time_ms
+	var_guess = (redpitaya.ramp_time_ms/finesse)**2
 	guess = [var_guess, mean_guess, max_guess]
 	return guess
