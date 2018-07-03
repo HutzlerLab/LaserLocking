@@ -63,17 +63,23 @@ def closeAll():
 
 def updateCavityData(axis, data, fit_data):
 	lines = axis.get_lines()
-	line_data = lines[0]
-	line_fit = lines[1]
+	line_fit = lines[0]
+	line_data = lines[1]	
 	line_data.set_ydata(data)
 	line_fit.set_ydata(fit_data)
 	axis.relim(True)
 	axis.autoscale_view(True, True, True)
 
 def updateErrorData(axis,data):
+	keep_values = 100
 	line = axis.get_lines()[0]
-	line.set_ydata(data)
-	line.set_xdata(np.linspace(1,len(data),len(data)))
+	if len(data) > keep_values:
+		line.set_ydata(data[-keep_values:])
+		line.set_xdata(np.linspace(1,keep_values,keep_values))
+	else:
+		line.set_ydata(data)
+		line.set_xdata(np.linspace(1,len(data),len(data)))
+		
 	axis.relim()
 	axis.autoscale_view(True,True,True)
 
