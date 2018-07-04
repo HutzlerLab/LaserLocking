@@ -27,9 +27,3 @@ def waitForTrigger(redpitaya, timeout=10):
 	return trig_result
 
 
-
-# Things I want in data
-# Most recent data trace
-# Analysis results, ie separation, means, etc
-# 
-# 

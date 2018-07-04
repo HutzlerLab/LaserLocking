@@ -83,7 +83,7 @@ def setParameters(redpitaya, parameters):
 	redpitaya.ramp_time_ms = 10**3 * 1/ramp_freq_Hz
 	print('Ramp time is {} ms'.format(redpitaya.ramp_time_ms))
 
-	initial_amplitude = 0
+	initial_amplitude = 0.0
 	redpitaya.setOutputAmplitude(redpitaya.feedback_channel, initial_amplitude)
 
 if __name__ == '__main__':

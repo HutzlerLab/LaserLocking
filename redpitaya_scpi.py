@@ -218,7 +218,7 @@ class SCPI (object):
         self.rp.write('SOUR{}:VOLT {}'.format(channel,amplitude_volts))
         return
 
-    def setOffset(self,offset_volts):
+    def setOffset(self,channel, offset_volts):
         self.rp.write('SOUR{}:VOLT:OFFS {}'.format(channel, offset_volts))
         return
 

@@ -37,6 +37,7 @@ class RedPitaya:
         self.feeedback_waveform = None
         self.frequency_Hz = 1000
         self.amplitude_volts = 1
+        self.offset_volts = 0
 
     # Finished initializing
         self.scpi.flashAllLED()
@@ -242,11 +243,12 @@ class RedPitaya:
             self.setOutputFrequency(channel, 0)
 
     def setOutputAmplitude(self, channel, amplitude_volts):
-        if abs(amplitude_volts) > 1:
-            amplitude_volts = amplitude_volts/abs(amplitude_volts)
-
         self.scpi.setAmplitude(channel, amplitude_volts)
         self.amplitude_volts = amplitude_volts
+
+    def setOutputOffset(self, channel, offset_volts):
+    	self.scpi.setOffset(channel, offset_volts)
+    	self.offset_volts = offset_volts
 
     def enableOutput(self, channel):
         self.scpi.enableOutput(channel)

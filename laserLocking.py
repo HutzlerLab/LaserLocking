@@ -17,8 +17,8 @@ def main(ip, param_file='laser_locking_parameters.txt'):
 	# Initialize plotting
 	figure = updateDisplay.initialize3Plots(redpitaya)
 
-	# Start output at zero.
-	redpitaya.enableOutput(1)
+	# Start output at some value (usually 0).
+	redpitaya.enableOutput(redpitaya.feedback_channel)
 
 	# Timing
 	i=0
