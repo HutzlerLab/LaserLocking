@@ -3,8 +3,12 @@
 import numpy as np
 from scipy.optimize import curve_fit
 
+ANALYSIS_SUCCESSFUL = True
+
 def main(redpitaya):
-	redpitaya.fit_params = analyzeBothChannels(redpitaya)
+	analysis_results = analyzeBothChannels(redpitaya)
+	if ANALYSIS_SUCCESSFUL:
+		redpitaya.fit_params = analysis_results
 	redpitaya.error.append(calculateError(redpitaya))
 	return
 
@@ -14,8 +18,10 @@ def gaussian(x,a,b,n):
 def fitGaussian(xscale, data, guess):
 	try:
 		popt, pcov = curve_fit(gaussian, xscale, data, guess) #bounds=([0,-3*length,0],[3*length**2,3*length,10]))
+		ANALYSIS_SUCCESSFUL = True
 	except RuntimeError:
 		print("Error - curve_fit failed")
+		ANALYSIS_SUCCESSFUL = False
 		popt, pcov = [],[]
 	return [popt,pcov]
 
