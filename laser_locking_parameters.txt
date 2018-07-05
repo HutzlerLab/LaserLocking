@@ -1,6 +1,6 @@
 Laser Locking Parameters
 Sample Time (ms)	= 47
-Trigger Delay Fraction	= 0.5
+Trigger Delay Fraction	= 0.0
 Trigger Level (mV)	= 500
 Gain1			= LV
 Gain2			= LV

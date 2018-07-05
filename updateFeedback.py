@@ -5,5 +5,5 @@ def main(redpitaya):
 	calibration = 0.004
 	output_value = error - redpitaya.amplitude_volts - calibration
 	print(output_value)
-	redpitaya.setOffset(redpitaya.feedback_channel, output_value)
+	redpitaya.setOutputOffset(redpitaya.feedback_channel, output_value)
 	return
