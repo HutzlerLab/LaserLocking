@@ -18,12 +18,10 @@ def gaussian(x,a,b,n):
 def fitGaussian(xscale, data, guess):
 	try:
 		popt, pcov = curve_fit(gaussian, xscale, data, guess) #bounds=([0,-3*length,0],[3*length**2,3*length,10]))
-		ANALYSIS_SUCCESSFUL = True
+		return [popt,pcov]
 	except RuntimeError:
 		print("Error - curve_fit failed")
-		ANALYSIS_SUCCESSFUL = False
-		popt, pcov = [],[]
-	return [popt,pcov]
+		return [[],[]]
 
 def getMean(single_fit_params):
 	mean = single_fit_params[1]
@@ -49,7 +47,13 @@ def analyzeSingleChannel(redpitaya, channel):
 def analyzeBothChannels(redpitaya):
 	analysis = []
 	for ch in {1,2}:
-		analysis.append(analyzeSingleChannel(redpitaya, ch))
+		results = analyzeSingleChannel(redpitaya, ch)
+		if results:
+			analysis.append(analyzeSingleChannel(redpitaya, ch))
+	if len(analysis) != 2:
+		ANALYSIS_SUCCESFUL = False
+	else:
+		ANALYSIS_SUCCESSFUL = True
 	return analysis
 
 def makeGuess(redpitaya, data):
