@@ -7,7 +7,7 @@ ANALYSIS_SUCCESSFUL = True
 
 def main(redpitaya):
 	analysis_results = analyzeBothChannels(redpitaya)
-	if ANALYSIS_SUCCESSFUL:
+	if len(analysis_results) == 2:
 		redpitaya.fit_params = analysis_results
 	redpitaya.error.append(calculateError(redpitaya))
 	return
@@ -19,8 +19,10 @@ def fitGaussian(xscale, data, guess):
 	try:
 		popt, pcov = curve_fit(gaussian, xscale, data, guess) #bounds=([0,-3*length,0],[3*length**2,3*length,10]))
 		return [popt,pcov]
+		ANALYSIS_SUCCESSFUL = True
 	except RuntimeError:
 		print("Error - curve_fit failed")
+		ANALYSIS_SUCCESSFUL = False
 		return [[],[]]
 
 def getMean(single_fit_params):
@@ -47,13 +49,9 @@ def analyzeSingleChannel(redpitaya, channel):
 def analyzeBothChannels(redpitaya):
 	analysis = []
 	for ch in {1,2}:
-		results = analyzeSingleChannel(redpitaya, ch)
-		if results:
-			analysis.append(analyzeSingleChannel(redpitaya, ch))
-	if len(analysis) != 2:
-		ANALYSIS_SUCCESFUL = False
-	else:
-		ANALYSIS_SUCCESSFUL = True
+		result = analyzeSingleChannel(redpitaya, ch)
+		if ANALYSIS_SUCCESSFUL:
+			analysis.append(result)
 	return analysis
 
 def makeGuess(redpitaya, data):
