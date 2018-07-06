@@ -58,7 +58,7 @@ def main(ip, param_file='laser_locking_parameters.txt'):
 
 	# Escape loop with interrupt
 	except KeyboardInterrupt:
-		stopRP(redpitaya)
+		stopRP(redpitaya,avg_loop_time)
 		redpitaya.closeConnection()
 		updateDisplay.closeAll()
 		print('Program stopped.')

@@ -21,8 +21,8 @@ def fitGaussian(xscale, data, guess):
 	global ANALYSIS_SUCCESSFUL
 	try:
 		popt, pcov = curve_fit(gaussian, xscale, data, guess) #bounds=([0,-3*length,0],[3*length**2,3*length,10]))
-		return [popt,pcov]
 		ANALYSIS_SUCCESSFUL = True
+		return [popt,pcov]
 	except RuntimeError:
 		print("Error - curve_fit failed")
 		ANALYSIS_SUCCESSFUL = False
@@ -42,6 +42,8 @@ def calculateError(redpitaya):
 	error = mean_stable - mean_unstable
 	max_error = redpitaya.ramp_time_ms
 	scaled_error = error/max_error
+	if abs(scaled_error) > 1
+		scaled_error=scaled_error/abs(scaled_error)
 	return scaled_error
 
 def analyzeSingleChannel(redpitaya, channel):
@@ -53,7 +55,6 @@ def analyzeBothChannels(redpitaya):
 	analysis = []
 	for ch in {1,2}:
 		result = analyzeSingleChannel(redpitaya, ch)
-		print(ANALYSIS_SUCCESSFUL)
 		if ANALYSIS_SUCCESSFUL:
 			analysis.append(result)
 	return analysis

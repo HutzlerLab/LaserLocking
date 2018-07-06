@@ -59,7 +59,7 @@ class RedPitaya:
     def closeConnection(self):
         self.scpi.turnOffAllLED()
         self.scpi.close()
-        print('Connection at {} closed.'.format(self.scpi.host))
+        print('Connection closed.')
 
 # Acquisition commands
     def startAcquisition(self):
