@@ -42,7 +42,7 @@ def calculateError(redpitaya):
 	error = mean_stable - mean_unstable
 	max_error = redpitaya.ramp_time_ms
 	scaled_error = error/max_error
-	if abs(scaled_error) > 1
+	if abs(scaled_error) > 1:
 		scaled_error=scaled_error/abs(scaled_error)
 	return scaled_error
 
