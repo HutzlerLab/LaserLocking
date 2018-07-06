@@ -9,6 +9,8 @@ def main(redpitaya):
 	analysis_results = analyzeBothChannels(redpitaya)
 	if len(analysis_results) == 2:
 		redpitaya.fit_params = analysis_results
+	else:
+		print("Error performing analysis")
 	redpitaya.error.append(calculateError(redpitaya))
 	return
 
@@ -16,6 +18,7 @@ def gaussian(x,a,b,n):
 	return n*np.exp(-(x-b)**2/(2*a))
 
 def fitGaussian(xscale, data, guess):
+	global ANALYSIS_SUCCESSFUL
 	try:
 		popt, pcov = curve_fit(gaussian, xscale, data, guess) #bounds=([0,-3*length,0],[3*length**2,3*length,10]))
 		return [popt,pcov]
@@ -50,6 +53,7 @@ def analyzeBothChannels(redpitaya):
 	analysis = []
 	for ch in {1,2}:
 		result = analyzeSingleChannel(redpitaya, ch)
+		print(ANALYSIS_SUCCESSFUL)
 		if ANALYSIS_SUCCESSFUL:
 			analysis.append(result)
 	return analysis
