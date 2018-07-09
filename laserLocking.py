@@ -2,7 +2,8 @@
 
 import sys
 import time
-
+import csv
+import datetime
 import initializeRP
 import takeData
 import analyzeData
@@ -70,3 +71,9 @@ def main(ip, param_file='laser_locking_parameters.txt'):
 def stopRP(redpitaya,avg_loop_time):
 	redpitaya.stopAcquisition()
 	redpitaya.disableOutput(redpitaya.feedback_channel)
+	name = 'Error_signal_'+datetime.datetime.today().strftime('%I%M%p_%Y%m%d')+'.csv'
+	title = 'Error Value'
+	with open(name,'w',newline='') as f:
+		wr = csv.writer(f)
+		wr.writerow([title])
+		wr.writerows(zip(redpitaya.error))
