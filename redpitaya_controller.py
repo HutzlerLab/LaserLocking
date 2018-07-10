@@ -63,24 +63,27 @@ class RedPitaya:
         print('Connection closed.')
 
 # Acquisition commands
-    def startAcquisition(self):
+    def startAcquisition(self, p=False):
         self.scpi.startAcq()
         self.scpi.turnOnLED(7)
-        print('Acquisition started.')
+        if p:
+            print('Acquisition started.')
         time.sleep(self.buff_time_ms*0.001)
 
-    def stopAcquisition(self):
+    def stopAcquisition(self, p=False):
         self.scpi.stopAcq()
         self.scpi.turnOffLED(7)
-        print('Acquisition stopped.')
+        if p:
+            print('Acquisition stopped.')
 
-    def getAcqTime(self):
+    def getAcqTime(self, p=False):
         self.decimation = self.scpi.getDecimation()
-        print('Decimation factor is {}'.format(self.decimation))
-        print('Buffer time length is {} ms'.format(self.buff_time_ms))
+        if p:
+            print('Decimation factor is {}'.format(self.decimation))
+            print('Buffer time length is {} ms'.format(self.buff_time_ms))
         return self.buff_time_ms
 
-    def setAcqTime(self,sample_time):
+    def setAcqTime(self,sample_time,p=False):
         desired_dec = int(2**(math.ceil(math.log2(sample_time/(131.072 * 10**-3)))))
         dec_list = [1,8,64,1024,8192,65536]
         if any(desired_dec != dec for dec in dec_list):
@@ -89,23 +92,24 @@ class RedPitaya:
         else:
             actual_dec = desired_dec
         self.scpi.setDecimation(actual_dec)
-        self.getAcqTime()
+        self.getAcqTime(p=p)
 
-    def setAvgStatus(self, avg):
+    def setAvgStatus(self, avg,p=False):
         if avg=='ON':
             self.scpi.enableAvg()
         elif avg=='OFF':
             self.scpi.disableAvg()
         else:
             print('{} is not a recognized value for average status. Accepted values are ON and OFF.'.format(avg))
-        self.getAvgStatus()
+        self.getAvgStatus(p=p)
 
-    def getAvgStatus(self):
+    def getAvgStatus(self,p=False):
         self.avg = self.scpi.getAvgStatus()
-        print('Averaging is {}'.format(self.avg))
+        if p:
+            print('Averaging is {}'.format(self.avg))
         return self.avg
     
-    def setInputGain(self,gain,channel):
+    def setInputGain(self,gain,channel,p=False):
         bad = False
         if gain == 'HV':
             self.scpi.setInputHighV(channel)
@@ -114,30 +118,31 @@ class RedPitaya:
         else:
             print('{} is not a recognized value for input gain. \nAccepted values are HV and LV.'.format(gain))
             bad = True
-
-        if bad == False:
+        if bad == False and p:
             print('Input {} gain setting is {}'.format(channel,gain))
 
-    def setTrigDelay(self, delay_fraction):
+    def setTrigDelay(self, delay_fraction,p=False):
         delay_samples = int((delay_fraction*2-1)*self.buff_size/2)
         self.scpi.setTrigDelay(delay_samples)
-        self.getTrigDelay()
+        self.getTrigDelay(p=p)
 
-    def getTrigDelay(self):
+    def getTrigDelay(self,p=False):
         delay_samples = self.scpi.getTrigDelay()
         self.trig_delay = (2*delay_samples/self.buff_size+1)/2
-        print('Trigger delay is {}% of the buffer'.format(self.trig_delay*100))
+        if p:
+            print('Trigger delay is {}% of the buffer'.format(self.trig_delay*100))
         return self.trig_delay
 
-    def setTrigLevel(self, level_mV):
+    def setTrigLevel(self, level_mV,p=False):
         self.scpi.setTrigLevel(level_mV)
-        self.getTrigLevel()
+        self.getTrigLevel(p=p)
 
-    def getTrigLevel(self):
+    def getTrigLevel(self,p=False):
         self.trig_level = self.scpi.getTrigLevel()
-        print('Trigger level is {} mV'.format(self.trig_level))
+        if p:
+            print('Trigger level is {} mV'.format(self.trig_level))
 
-    def runTriggerLoop(self,timeout=10):
+    def runTriggerLoop(self,timeout=10,p=False):
         self.scpi.turnOnLED(5)
         start = time.time()
         while True:
@@ -146,7 +151,8 @@ class RedPitaya:
 
             if self.trig_status == 'TD':
                 self.scpi.turnOffLED(5)
-                print('Triggered')
+                if p:
+                    print('Triggered')
                 return True
 
             elif elapsed > timeout:
@@ -157,14 +163,15 @@ class RedPitaya:
                 print('Trigger timed out after {} seconds'.format(timeout))
                 return False
 
-    def setTrigSource(self,source):
+    def setTrigSource(self,source,p=False):
         self.scpi.setTrigSource(source)
         self.trig_source = source
-        print('Trigger source set to {}'.format(source))
+        if p:
+            print('Trigger source set to {}'.format(source))
 
 # Data commands
 
-    def setDataUnits(self,units):
+    def setDataUnits(self,units,p=False):
         bad = False
         if units == 'RAW':
             self.scpi.setAcqUnitsRaw()
@@ -176,10 +183,10 @@ class RedPitaya:
             print('{} is not a recognized value for data units. \nAccepted values are RAW and VOLTS.'.format(units))
             bad = True
 
-        if bad == False:
+        if bad == False and p:
             print('Data units set to {}'.format(units))
 
-    def setDataFormat(self,data_format):
+    def setDataFormat(self,data_format,p=False):
         bad = False
         if data_format == 'ASCII':
             self.scpi.setDataFormatASCII()
@@ -189,7 +196,7 @@ class RedPitaya:
             print('{} is not a recognized value for data format. \nAccepted values are ASCII and BIN.'.format(data_format))
             bad = True
 
-        if bad == False:
+        if bad == False and p:
             self.data_format = data_format
 
     def getAllRawData(self, channel):
@@ -230,18 +237,19 @@ class RedPitaya:
 
 # Output commands
 
-    def setOutputFrequency(self, channel, frequency_Hz):
+    def setOutputFrequency(self, channel, frequency_Hz,p=False):
         self.scpi.setFreq(channel,frequency_Hz)
         self.frequency_Hz = frequency_Hz
-        print('Output {} frequency set to {} Hz.'.format(channel, frequency_Hz))
+        if p:
+            print('Output {} frequency set to {} Hz.'.format(channel, frequency_Hz))
 
-    def setOutputWaveform(self, channel, waveform):
+    def setOutputWaveform(self, channel, waveform,p=False):
         self.scpi.setWaveform(channel, waveform)
         self.feedback_waveform = waveform
-        print('Output {} waveform set to {}'.format(channel,waveform))
-
         if waveform == 'DC':
             self.setOutputFrequency(channel, 0)
+        if p:
+            print('Output {} waveform set to {}'.format(channel,waveform))
 
     def setOutputAmplitude(self, channel, amplitude_volts):
         self.scpi.setAmplitude(channel, amplitude_volts)
@@ -251,12 +259,14 @@ class RedPitaya:
     	self.scpi.setOffset(channel, offset_volts)
     	self.offset_volts = offset_volts
 
-    def enableOutput(self, channel):
+    def enableOutput(self, channel,p=False):
         self.scpi.enableOutput(channel)
         self.scpi.turnOnLED(4)
-        print('Output {} enabled.'.format(channel))
+        if p:
+            print('Output {} enabled.'.format(channel))
 
-    def disableOutput(self,channel):
+    def disableOutput(self,channel,p=False):
         self.scpi.disableOutput(channel)
         self.scpi.turnOffLED(4)
-        print('Output {} disabled.'.format(channel))
+        if p:
+            print('Output {} disabled.'.format(channel))

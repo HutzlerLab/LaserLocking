@@ -48,7 +48,6 @@ def main(ip, param_file='laser_locking_parameters.txt'):
 				loop_end = time.time()
 				loop_time = loop_end - loop_start
 				avg_loop_time+=loop_time
-				print('Average loop time is {} seconds.'.format(avg_loop_time/i))
 			# No trigger
 			else:
 				stopRP(redpitaya)

@@ -41,31 +41,32 @@ def readFile(name):
 
 def setParameters(redpitaya, parameters):
 	sample_time = float(parameters[0])
-	redpitaya.setAcqTime(sample_time)
+	redpitaya.setAcqTime(sample_time,p=True)
 
 	delay_fraction = float(parameters[1])
-	redpitaya.setTrigDelay(delay_fraction)
+	redpitaya.setTrigDelay(delay_fraction,p=True)
 
 	trigger_level = float(parameters[2])
-	redpitaya.setTrigLevel(trigger_level)
+	redpitaya.setTrigLevel(trigger_level,p=True)
 
 	gain1 = parameters[3]
-	redpitaya.setInputGain(gain1,1)
+	redpitaya.setInputGain(gain1,1,p=True)
 
 	gain2 = parameters[4]
-	redpitaya.setInputGain(gain2,2)
+	redpitaya.setInputGain(gain2,2,p=True)
 
 	averaging = parameters[5]
-	redpitaya.setAvgStatus(averaging)
+	redpitaya.setAvgStatus(averaging,p=True)
 
 	data_units = parameters[6]
-	redpitaya.setDataUnits(data_units)
+	redpitaya.setDataUnits(data_units,p=True)
 
 	data_format = parameters[7]
-	redpitaya.setDataFormat(data_format)
+	redpitaya.setDataFormat(data_format,p=True)
 
 	trigger_source = parameters[8]
 	redpitaya.trig_source = trigger_source
+	print('Trigger source set to {}'.format(trigger_source))
 
 	stable_laser = int(parameters[9])
 	redpitaya.stable_channel = stable_laser
