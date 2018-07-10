@@ -15,7 +15,11 @@ def main(redpitaya):
 	return
 
 def gaussian(x,a,b,n):
-	return n*np.exp(-(x-b)**2/(2*a))
+	try:
+		return n*np.exp(-(x-b)**2/(2*a))
+	except RuntimeWarning:
+		print('x={},a={},b={},n={}'.format(x,a,b,n))
+		return 1
 
 def fitGaussian(xscale, data, guess):
 	global ANALYSIS_SUCCESSFUL
