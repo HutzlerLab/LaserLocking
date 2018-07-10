@@ -37,8 +37,12 @@ def getVariance(single_fit_params):
 	return variance
 
 def calculateError(redpitaya):
-	mean_stable = getMean(redpitaya.fit_params[redpitaya.stable_channel - 1])
-	mean_unstable = getMean(redpitaya.fit_params[redpitaya.unstable_channel - 1])
+	stable = redpitaya.stable_channel - 1
+	unstable = redpitaya.unstable_channel - 1
+	mean_stable = getMean(redpitaya.fit_params[stable])
+	mean_unstable = getMean(redpitaya.fit_params[unstable])
+	redpitaya.means[stable].append(mean_stable)
+	redpitaya.means[unstable].append(mean_unstable)
 	error = mean_stable - mean_unstable
 	max_error = redpitaya.ramp_time_ms
 	scaled_error = error/max_error

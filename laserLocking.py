@@ -74,6 +74,12 @@ def stopRP(redpitaya,avg_loop_time):
 	name = 'Error_signal_'+datetime.datetime.today().strftime('%I%M%p_%Y%m%d')+'.csv'
 	title = 'Error Value'
 	with open(name,'w',newline='') as f:
-		wr = csv.writer(f)
-		wr.writerow([title])
-		wr.writerows(zip(redpitaya.error))
+		w = csv.writer(f)
+		w.writerow([title])
+		w.writerows(zip(redpitaya.error))
+	name = 'Stable_Mean_'+datetime.datetime.today().strftime('%I%M%p_%Y%m%d')+'.csv'
+	title = 'Mean Value'
+	with open(name,'w',newline='') as f:
+		w = csv.writer(f)
+		w.writerow([title])
+		w.writerows(zip(redpitaya.means[0]))
