@@ -15,7 +15,7 @@ def main(redpitaya, fig):
 		fit_gaussian = convertFitToData(xscale, fit_params)
 		updateCavityData(axis, cavity_data, fit_gaussian)
 
-	updateErrorData(axes[-1],redpitaya.error)
+	updateErrorData(axes[-1],redpitaya.error,redpitaya.error_time)
 
 	fig.canvas.draw()
 	plt.tight_layout()
@@ -48,7 +48,7 @@ def initialize3Plots(redpitaya):
 	unstable_ax.legend()
 
 	error_ax = fig.add_subplot(313)
-	error_ax.set_xlabel('Time (ms)')
+	error_ax.set_xlabel('Time (s)')
 	error_ax.set_ylabel('Output {} (V)'.format(redpitaya.feedback_channel))
 	error_ax.set_title('Error')
 	line_error, = error_ax.plot(error_xdata,error_ydata)
@@ -70,15 +70,15 @@ def updateCavityData(axis, data, fit_data):
 	axis.relim(True)
 	axis.autoscale_view(True, True, True)
 
-def updateErrorData(axis,data):
+def updateErrorData(axis,data, time_data):
 	keep_values = 100
 	line = axis.get_lines()[0]
 	if len(data) > keep_values:
 		line.set_ydata(data[-keep_values:])
-		line.set_xdata(np.linspace(1,keep_values,keep_values))
+		line.set_xdata(time_data[-keep_values:])
 	else:
 		line.set_ydata(data)
-		line.set_xdata(np.linspace(1,len(data),len(data)))
+		line.set_xdata(time_data)
 		
 	axis.relim()
 	axis.autoscale_view(True,True,True)
