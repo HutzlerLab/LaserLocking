@@ -2,16 +2,18 @@
 
 import numpy as np
 from scipy.optimize import curve_fit
+import time
 
 ANALYSIS_SUCCESSFUL = True
 
-def main(redpitaya):
+def main(redpitaya, start):
 	analysis_results = analyzeBothChannels(redpitaya)
 	if len(analysis_results) == 2:
 		redpitaya.fit_params = analysis_results
 	else:
 		print("Error performing analysis")
 	redpitaya.error.append(calculateError(redpitaya))
+	redpitaya.error_time.append(time.time()-start)
 	return
 
 def gaussian(x,a,b,n):
@@ -68,7 +70,7 @@ def analyzeBothChannels(redpitaya):
 	return analysis
 
 def makeGuess(redpitaya, data):
-	finesse = 300
+	finesse = 123
 	max_guess = np.amax(data)
 	mean_guess = np.argmax(data)/redpitaya.ramp_samples*redpitaya.ramp_time_ms
 	var_guess = (redpitaya.ramp_time_ms/finesse)**2

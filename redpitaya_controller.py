@@ -27,6 +27,7 @@ class RedPitaya:
     # Data attributes
         self.data        = None
         self.error       = []
+        self.error_time  = []
         self.fit_params  = None
         self.means = [[],[]]
         self.stable_channel = None
