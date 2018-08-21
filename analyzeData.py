@@ -6,14 +6,18 @@ import time
 
 ANALYSIS_SUCCESSFUL = True
 
-def main(redpitaya, start):
+def main(redpitaya, loop_begin):
 	analysis_results = analyzeBothChannels(redpitaya)
 	if len(analysis_results) == 2:
 		redpitaya.fit_params = analysis_results
+		redpitaya.error.append(calculateError(redpitaya))
 	else:
 		print("Error performing analysis")
-	redpitaya.error.append(calculateError(redpitaya))
-	redpitaya.error_time.append(time.time()-start)
+		if len(redpitaya.error) == 0:
+			redpitaya.error.append(0)
+		else:
+			redpitaya.error.append(redpitaya.error[-1])
+	redpitaya.error_time.append(time.time()-loop_begin)
 	return
 
 def gaussian(x,a,b,n):

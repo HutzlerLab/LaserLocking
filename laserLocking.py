@@ -24,7 +24,7 @@ def main(ip, param_file='laser_locking_parameters.txt'):
 	# Timing
 	i=0
 	avg_loop_time = 0
-
+	loop_begin = time.time()
 	# Lock the laser in a loop. Exit loop with CTRL+C
 	try:
 		while(True):
@@ -35,7 +35,7 @@ def main(ip, param_file='laser_locking_parameters.txt'):
 			# Trigger received
 			if acquisition_successful:
 				# Analyze data
-				analyzeData.main(redpitaya, loop_start)
+				analyzeData.main(redpitaya, loop_begin)
 
 				# Update feedback
 				updateFeedback.main(redpitaya)
