@@ -81,4 +81,4 @@ def stopRP(redpitaya,avg_loop_time):
 	with open(name,'w',newline='') as f:
 		w = csv.writer(f)
 		w.writerow([title,"Time (s)"])
-		w.writerows(zip(redpitaya.means[0]), redpitaya.error_time)
+		w.writerows(zip(redpitaya.means[0], redpitaya.error_time))
