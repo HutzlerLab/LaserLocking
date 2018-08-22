@@ -188,6 +188,14 @@ class SCPI (object):
         raw_data = self.rp.query('ACQ:SOUR{}:DATA?'.format(channel))
         return raw_data
 
+    def getASCIIData(self, channel):
+        data_array = self.rp.query_ascii_values('ACQ:SOUR{}:DATA?'.format(channel), container=np.array)
+        return data_array
+
+    def getBINData(self,channel):
+        data_array = self.rp.query_binary_values('ACQ:SOUR{}:DATA?'.format(channel), datatype='h', container=np.array)
+        return data_array
+
     def getLateRawData(self, channel, samples):
         raw_data = self.rp.query('ACQ:SOUR{}:DATA:LAT:N? {}'.format(channel,samples))
         return raw_data

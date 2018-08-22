@@ -210,6 +210,14 @@ class RedPitaya:
         # alternatives: map(float, buff_string) or np.array(list(map(float,buff_string))) or can try np.fromiter(map(float,buff_string))
         return data_array
 
+    def testGetASCIIData(self, channel):
+        data_array = self.scpi.getASCIIData(channel)
+        return data_array
+
+    def testGetBINData(self, raw_data):
+        data_array = self.scpi.getBINData(channel)
+        return data_array
+
     def getAllProcessedData(self,channel):
         self.scpi.turnOnLED(6)
         raw_data = self.scpi.getAllRawData(channel)
