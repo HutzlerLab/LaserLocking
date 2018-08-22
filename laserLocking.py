@@ -10,6 +10,7 @@ import analyzeData
 import updateFeedback
 import updateDisplay
 
+
 def main(ip, param_file='laser_locking_parameters.txt'):
 	# Start/open communitation channel to Red Pitaya
 	# Set parameters

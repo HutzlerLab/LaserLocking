@@ -3,7 +3,7 @@
 from redpitaya_scpi import SCPI
 from redpitaya_controller import RedPitaya
 import visa
-import argparse
+#import argparse
 
 #parser = argparse.ArgumentParser(description='Initialize red pitaya')
 #parser.add_argument('-ip',           		type=str, default='169.254.174.98', 				help='provide IP address for RedPitaya')
