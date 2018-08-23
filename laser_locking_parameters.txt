@@ -12,4 +12,5 @@ Stable Laser Channel 	= 1
 Unstable Laser Channel  = 2
 Feedback Channel	= 1
 Feedback Waveform	= DC
-Ramp Frequency (Hz)	= 31.2	
+Ramp Frequency (Hz)	= 31.2
+Set Point (V)		= 0.0
