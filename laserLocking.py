@@ -9,6 +9,7 @@ import takeData
 import analyzeData
 import updateFeedback
 import updateDisplay
+import PID
 
 
 def main(ip, param_file='laser_locking_parameters.txt'):
@@ -21,6 +22,9 @@ def main(ip, param_file='laser_locking_parameters.txt'):
 
 	# Start output at some value (usually 0).
 	redpitaya.enableOutput(redpitaya.feedback_channel)
+
+	# Initialize PID
+	pid = PID()
 
 	# Timing
 	i=0
