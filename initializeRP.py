@@ -9,11 +9,10 @@ import visa
 #parser.add_argument('-ip',           		type=str, default='169.254.174.98', 				help='provide IP address for RedPitaya')
 #args = parser.parse_args()
 
-def main(ip,name='laser_locking_parameters.txt'):
+def main(ip, param_dict):
 	rp_instrument = openConnection(ip)
 	redpitaya = RedPitaya(rp_instrument)
-	parameters = readFile(name)
-	setParameters(redpitaya, parameters)
+	setParameters(redpitaya, param_dict)
 	redpitaya.scpi.flashAllLED()
 	return redpitaya
 
@@ -24,64 +23,35 @@ def openConnection(ip):
 	rp_instrument = rm.open_resource('TCPIP::{}::{}::SOCKET'.format(ip, port), read_termination = delimiter)	
 	return rp_instrument
 
+def setParameters(redpitaya, param_dict):
+	redpitaya.setTrigDelay(param_dict['Trigger Delay Fraction'],p=True)
 
-def readFile(name):
-	#parameters = {
-	#	}
-	parameters=[]
-	with open(name,'r') as f:
-		text = f.readlines()[1:]
+	redpitaya.setTrigLevel(param_dict['Trigger Level'],p=True)
 
-		for line in text:
-			words = line.split('=')
-			param = words[1].strip('\n').strip()
-			parameters.append(param)
+	redpitaya.setInputGain(param_dict['Gain1'],1,p=True)
 
-	return parameters
+	redpitaya.setInputGain(param_dict['Gain2'],2,p=True)
 
-def setParameters(redpitaya, parameters):
-	sample_time = float(parameters[0])
-	redpitaya.setAcqTime(sample_time,p=True)
+	redpitaya.setAvgStatus(param_dict['Averaging'],p=True)
 
-	delay_fraction = float(parameters[1])
-	redpitaya.setTrigDelay(delay_fraction,p=True)
+	redpitaya.setDataUnits(param_dict['Acquisition Units'],p=True)
 
-	trigger_level = float(parameters[2])
-	redpitaya.setTrigLevel(trigger_level,p=True)
+	redpitaya.setDataFormat(param_dict['Acquisiton Format'],p=True)
 
-	gain1 = parameters[3]
-	redpitaya.setInputGain(gain1,1,p=True)
+	redpitaya.trig_source = param_dict['Acquisition Trigger']
+	print('Trigger source set to {}'.format(redpitaya.trigger_source))
 
-	gain2 = parameters[4]
-	redpitaya.setInputGain(gain2,2,p=True)
+	redpitaya.stable_channel = param_dict['Stable Laser Channel']
 
-	averaging = parameters[5]
-	redpitaya.setAvgStatus(averaging,p=True)
+	redpitaya.unstable_channel = param_dict['Unstable Laser Channel']
 
-	data_units = parameters[6]
-	redpitaya.setDataUnits(data_units,p=True)
+	redpitaya.feedback_channel = param_dict['Feedback Channel']
 
-	data_format = parameters[7]
-	redpitaya.setDataFormat(data_format,p=True)
+	redpitaya.setOutputWaveform(redpitaya.feedback_channel, param_dict['Feedback Waveform'])
 
-	trigger_source = parameters[8]
-	redpitaya.trig_source = trigger_source
-	print('Trigger source set to {}'.format(trigger_source))
-
-	stable_laser = int(parameters[9])
-	redpitaya.stable_channel = stable_laser
-
-	unstable_laser = int(parameters[10])
-	redpitaya.unstable_channel = unstable_laser
-
-	feedback_channel = int(parameters[11])
-	redpitaya.feedback_channel = feedback_channel
-
-	feedback_waveform = parameters[12]
-	redpitaya.setOutputWaveform(redpitaya.feedback_channel, feedback_waveform)
-
-	ramp_freq_Hz = float(parameters[13])
+	ramp_freq_Hz = param_dict['Ramp Frequency']
 	redpitaya.ramp_time_ms = 10**3 * 1/ramp_freq_Hz *0.995
+	redpitaya.setAcqTime(redpitaya.ramp_time_ms,p=True)
 	print('Ramp time is {} ms'.format(redpitaya.ramp_time_ms))
 
 	initial_amplitude = 0.0
