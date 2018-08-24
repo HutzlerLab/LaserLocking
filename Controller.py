@@ -1,7 +1,8 @@
-class ControlLoop:
+import time
+
+class Controller:
 
 	def __init__(self,ip,param_file):
-		self.ip = ip
 		self.file = param_file
 		self.params = self.getParams()
 		self.redpitaya = initializeRP.main(ip, self.params)
@@ -32,6 +33,10 @@ class ControlLoop:
 		param_dict['Set Point'] = float(param_dict['Set Point'])
 		return param_dict
 
+	def controlLoop(self):
+		loop_begin = time.time()
+		try:
+			while True:
 
-
-
+		except:
+			KeyboardInterrupt
