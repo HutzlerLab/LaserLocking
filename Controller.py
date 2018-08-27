@@ -1,19 +1,30 @@
 import time
+import PID
+import initializeRP
+import takeData
+import analyzeData
+import updateFeedback
+import updateDisplay
+import datetime
+import csv
+
 
 class Controller:
 
-	def __init__(self,ip,param_file):
-		self.file = param_file
-		self.params = self.getParams()
+	def __init__(self,ip,param_dict):
+		self.params = param_dict
 		self.redpitaya = initializeRP.main(ip, self.params)
-		self.pid = PID(self.params)
+		self.pid = PID()
 		self.pidON = False
-		self.loop_iter = 0
-		self.figure = updateDisplay.initialize3Plots(redpitaya)
 
-	def getParams(self):
+		self.clear()
+		self.figure = updateDisplay.initialize3Plots(redpitaya)
+		self.redpitaya.enableOutput(self.redpitaya.feedback_channel)
+
+	@classmethod
+	def getParams(cls,param_file):
 		param_dict = {}
-		with open(self.file,'r') as f:
+		with open(param_file,'r') as f:
 			text = f.readlines()[1:]
 			for line in text:
 				words = line.split('=')
@@ -31,12 +42,71 @@ class Controller:
 		param_dict['Feedback Channel'] = int(param_dict['Feedback Channel'])
 		param_dict['Ramp Frequency'] = float(param_dict['Ramp Frequency'])
 		param_dict['Set Point'] = float(param_dict['Set Point'])
-		return param_dict
+		return cls(ip,param_dict)
 
-	def controlLoop(self):
-		loop_begin = time.time()
+	def clear(self):
+		self.loop_begin = time.time()
+		self.loop_iter = 0
+		self.avg_loop_time = 0
+		self.pid.clear()
+
+	def controlLoop(self, set_point_widget):
+		self.loop_begin = time.time()
+		redpitaya = self.redpitaya
 		try:
-			while True:
+			while(True):
+				loop_start = time.time()
+				self.pid.set_point = set_point_widget.value
+				# Take data
+				acquisition_successful = takeData.main(redpitaya)
 
-		except:
-			KeyboardInterrupt
+				# Trigger received
+				if acquisition_successful:
+					# Analyze data
+					analyzeData.main(redpitaya, self.loop_begin)
+
+					# Update feedback
+					updateFeedback.main(redpitaya, self.pid)
+
+					# Update display
+					updateDisplay.main(redpitaya, self.figure)
+
+					# Timing
+					loop_end = time.time()
+					loop_time = loop_end - loop_start
+					self.avg_loop_time+=loop_time
+					self.loop_iter+=1
+				# No trigger
+				else:
+					self.stopRP(redpitaya)
+					redpitaya.closeConnection()
+					updateDisplay.closeAll()
+					print('No trigger was detected so acquisition was stopped, the program was aborted, and the connection was closed.')
+					break
+
+		# Escape loop with interrupt
+		except KeyboardInterrupt:
+			self.stopRP()
+			self.redpitaya.closeConnection()
+			updateDisplay.closeAll()
+			print('Program stopped.')
+			if self.loop_iter > 0:
+				print('Average loop time was {} seconds.'.format(self.avg_loop_time/self.loop_iter))
+			pass
+
+	def stopRP(self):
+		redpitaya = self.redpitaya
+		redpitaya.stopAcquisition()
+		redpitaya.disableOutput(redpitaya.feedback_channel)
+		name = 'Error_signal_'+datetime.datetime.today().strftime('%I%M%p_%Y%m%d')+'.csv'
+		title = 'Error Value'
+		with open(name,'w',newline='') as f:
+			w = csv.writer(f)
+			w.writerow([title,"Time (s)"])
+			w.writerows(zip(redpitaya.error,redpitaya.error_time))
+		name = 'Stable_Mean_'+datetime.datetime.today().strftime('%I%M%p_%Y%m%d')+'.csv'
+		title = 'Mean Value'
+		with open(name,'w',newline='') as f:
+			w = csv.writer(f)
+			w.writerow([title,"Time (s)"])
+			w.writerows(zip(redpitaya.means[0]), redpitaya.error_time)

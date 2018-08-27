@@ -1,12 +1,18 @@
 # updateFeedback.py
 
-def main(redpitaya):
+def main(redpitaya, pid):
 	error = redpitaya.error[-1]
-	calibration = 0.004
-	output_value = error - redpitaya.amplitude_volts - calibration
+	#calibration = 0.004
+	scale = 10
+	if pid.pidON:
+		output_value = 0
+	else:
+		output_value = error - pid.set_point #- redpitaya.amplitude_volts #- calibration
+		output_value /= scale
+
 	redpitaya.setOutputOffset(redpitaya.feedback_channel, output_value)
 	return
 
-def calculateFeedback(error, pid):
-	feedback = pid.main(error)
-	return feedback
+#def calculateFeedback(error, pid):
+#	feedback = pid.main(error)
+#	return feedback
