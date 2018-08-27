@@ -40,6 +40,7 @@ class RedPitaya:
         self.frequency_Hz = 1000
         self.amplitude_volts = 1
         self.offset_volts = 0
+        self.error_scale = 1
 
     # Finished initializing
         self.scpi.flashAllLED()

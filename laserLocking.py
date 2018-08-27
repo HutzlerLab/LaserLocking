@@ -16,26 +16,26 @@ def main(ip, param_file='laser_locking_parameters.txt'):
 
 	set_point_slider = widgets.FloatSlider(
 		value=controller.pid.set_point,
-    	min=-1.0,
-    	max=1.0,
-    	step=0.01,
-    	description='Set Point:',
-    	disabled=False,
-    	continuous_update=False,
-    	orientation='horizontal',
-    	readout=True,
-    	readout_format='.2f')
+		min=-1.0,
+		max=1.0,
+		step=0.01,
+		description='Set Point:',
+		disabled=False,
+		continuous_update=False,
+		orientation='horizontal',
+		readout=True,
+		readout_format='.2f')
 
-    set_point_text = widgets.FloatText(
-    	value=controller.pid.set_point,
-    	description='Any:',
-    	disabled=False)
+	set_point_text = widgets.FloatText(
+		value=controller.pid.set_point,
+		description='Any:',
+		disabled=False)
 
-    display(set_point_text, set_point_slider)
-    mylink = widgets.jslink((set_point_text, 'value'), (set_point_slider, 'value'))
+	display(set_point_text, set_point_slider)
+	mylink = widgets.jslink((set_point_text, 'value'), (set_point_slider, 'value'))
 
-    loopThread = threading.Thread(target=controller.controlLoop,args=(set_point_text,),daemon=True)
-	
+	loopThread = threading.Thread(target=controller.controlLoop,args=(set_point_text,),daemon=True)
+
 	loopThread.start()
 	# Initialize plotting
 	#figure = updateDisplay.initialize3Plots(redpitaya)

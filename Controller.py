@@ -42,6 +42,7 @@ class Controller:
 		param_dict['Feedback Channel'] = int(param_dict['Feedback Channel'])
 		param_dict['Ramp Frequency'] = float(param_dict['Ramp Frequency'])
 		param_dict['Set Point'] = float(param_dict['Set Point'])
+		param_dict['Error Scale Factor'] = float(param_dict['Error Scale Factor'])
 		return cls(ip,param_dict)
 
 	def clear(self):
@@ -66,7 +67,7 @@ class Controller:
 					analyzeData.main(redpitaya, self.loop_begin)
 
 					# Update feedback
-					updateFeedback.main(redpitaya, self.pid)
+					updateFeedback.main(redpitaya, self.pid,)
 
 					# Update display
 					updateDisplay.main(redpitaya, self.figure)
