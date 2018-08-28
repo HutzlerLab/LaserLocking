@@ -51,13 +51,14 @@ class ControllerClass:
 		self.avg_loop_time = 0
 		self.pid.clear()
 
-	def controlLoop(self, set_point_widget):
+	def controlLoop(self):
 		self.loop_begin = time.time()
 		redpitaya = self.redpitaya
 		try:
 			while(True):
 				loop_start = time.time()
-				self.pid.set_point = set_point_widget.value
+				#self.pid.set_point = set_point_widget.value
+				#print(self.pid.set_point)
 				# Take data
 				acquisition_successful = takeData.main(redpitaya)
 
@@ -67,7 +68,7 @@ class ControllerClass:
 					analyzeData.main(redpitaya, self.loop_begin)
 
 					# Update feedback
-					updateFeedback.main(redpitaya, self.pid,)
+					updateFeedback.main(self)
 
 					# Update display
 					updateDisplay.main(redpitaya, self.figure)
@@ -110,4 +111,4 @@ class ControllerClass:
 		with open(name,'w',newline='') as f:
 			w = csv.writer(f)
 			w.writerow([title,"Time (s)"])
-			w.writerows(zip(redpitaya.means[0]), redpitaya.error_time)
+			w.writerows(zip(redpitaya.means[0], redpitaya.error_time))

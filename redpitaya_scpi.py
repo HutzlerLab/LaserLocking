@@ -5,7 +5,6 @@
 import time
 import numpy as np
 import math
-import visa
 
 class SCPI (object):
     """SCPI class used to access Red Pitaya over an IP network."""
@@ -33,14 +32,6 @@ class SCPI (object):
     #     if self._socket is not None:
     #         self._socket.close()
     #     self._socket = None
-
-    @classmethod
-    def openConnection(cls,ip):
-    	delimiter = '\r\n'
-    	port = 5000
-    	rm = visa.ResourceManager('@py')
-    	rp_instrument = rm.open_resource('TCPIP::{}::{}::SOCKET'.format(ip, port), read_termination = delimiter)
-    	return cls(rp_instrument)
 
     def close(self):
         self.rp.close()

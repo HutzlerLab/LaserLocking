@@ -10,15 +10,15 @@ import visa
 #args = parser.parse_args()
 
 def main(ip, param_dict):
-	redpitaya = SCPI.openConnection(ip)
+	redpitaya = RedPitaya.openConnection(ip)
 	setParameters(redpitaya, param_dict)
 	redpitaya.scpi.flashAllLED()
 	return redpitaya
 
 def setParameters(redpitaya, param_dict):
-	redpitaya.setTrigDelay(param_dict['Trigger Delay Fraction'],p=True)
-
 	redpitaya.setTrigLevel(param_dict['Trigger Level'],p=True)
+
+	redpitaya.setTrigDelay(param_dict['Trigger Delay Fraction'],p=True)
 
 	redpitaya.setInputGain(param_dict['Gain1'],1,p=True)
 
@@ -49,7 +49,7 @@ def setParameters(redpitaya, param_dict):
 	initial_amplitude = 0.0
 	redpitaya.setOutputAmplitude(redpitaya.feedback_channel, initial_amplitude)
 
-	rp.error_scale = param_dict['Error Scale Factor']
+	redpitaya.error_scale = param_dict['Error Scale Factor']
 
 if __name__ == '__main__':
 	main(args.ip)

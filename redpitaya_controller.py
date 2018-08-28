@@ -2,6 +2,7 @@ import time
 import numpy as np
 from redpitaya_scpi import SCPI
 import math
+import visa
 
 class RedPitaya:
 
@@ -44,6 +45,14 @@ class RedPitaya:
 
     # Finished initializing
         self.scpi.flashAllLED()
+
+    @classmethod
+    def openConnection(cls,ip):
+    	delimiter = '\r\n'
+    	port = 5000
+    	rm = visa.ResourceManager('@py')
+    	rp_instrument = rm.open_resource('TCPIP::{}::{}::SOCKET'.format(ip, port), read_termination = delimiter)
+    	return cls(rp_instrument)
 
     @property
     def buff_time_ms(self):
@@ -123,7 +132,7 @@ class RedPitaya:
         if bad == False and p:
             print('Input {} gain setting is {}'.format(channel,gain))
 
-    def setTrigDelay(self, delay_fraction,p=False):
+    def setTrigDelay(self, delay_fraction, p=False):
         delay_samples = int((delay_fraction*2-1)*self.buff_size/2)
         self.scpi.setTrigDelay(delay_samples)
         self.getTrigDelay(p=p)
