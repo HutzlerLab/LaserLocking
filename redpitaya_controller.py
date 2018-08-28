@@ -192,14 +192,16 @@ class RedPitaya:
         bad = False
         if data_format == 'ASCII':
             self.scpi.setDataFormatASCII()
+            self.data_format = data_format
         elif data_format == 'BIN':
             self.scpi.setDataFormatBinary()
+            self.data_format = data_format
         else:
             print('{} is not a recognized value for data format. \nAccepted values are ASCII and BIN.'.format(data_format))
             bad = True
 
         if bad == False and p:
-            self.data_format = data_format
+            print('Data format set to {}'.format(data_format))
 
     def getAllRawData(self, channel):
         raw_data = self.scpi.getAllRawData(channel)
@@ -211,11 +213,13 @@ class RedPitaya:
         # alternatives: map(float, buff_string) or np.array(list(map(float,buff_string))) or can try np.fromiter(map(float,buff_string))
         return data_array
 
+    # Not Working
     def testGetASCIIData(self, channel):
         data_array = self.scpi.getASCIIData(channel)
         return data_array
-
-    def testGetBINData(self, raw_data):
+        
+    # Not Working
+    def testGetBINData(self, channel):
         data_array = self.scpi.getBINData(channel)
         return data_array
 

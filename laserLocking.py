@@ -1,7 +1,7 @@
 # Initialize and lock laser
 
 import time
-import Controller
+from Controller import ControllerClass
 from ipywidgets import interact, interactive, fixed, interact_manual
 from IPython.display import display
 import ipywidgets as widgets
@@ -12,7 +12,7 @@ def main(ip, param_file='laser_locking_parameters.txt'):
 	# Set parameters
 	#redpitaya = initializeRP.main(ip, param_file)
 
-	controller = Controller.getParams(ip, param_file)
+	controller = ControllerClass.getParams(ip, param_file)
 
 	set_point_slider = widgets.FloatSlider(
 		value=controller.pid.set_point,

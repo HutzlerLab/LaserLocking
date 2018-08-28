@@ -9,20 +9,20 @@ import datetime
 import csv
 
 
-class Controller:
+class ControllerClass:
 
 	def __init__(self,ip,param_dict):
 		self.params = param_dict
 		self.redpitaya = initializeRP.main(ip, self.params)
-		self.pid = PID()
+		self.pid = PID.PID()
 		self.pidON = False
 
 		self.clear()
-		self.figure = updateDisplay.initialize3Plots(redpitaya)
+		self.figure = updateDisplay.initialize3Plots(self.redpitaya)
 		self.redpitaya.enableOutput(self.redpitaya.feedback_channel)
 
 	@classmethod
-	def getParams(cls,param_file):
+	def getParams(cls,ip,param_file='laser_locking_parameters.txt'):
 		param_dict = {}
 		with open(param_file,'r') as f:
 			text = f.readlines()[1:]

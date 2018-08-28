@@ -10,18 +10,10 @@ import visa
 #args = parser.parse_args()
 
 def main(ip, param_dict):
-	rp_instrument = openConnection(ip)
-	redpitaya = RedPitaya(rp_instrument)
+	redpitaya = SCPI.openConnection(ip)
 	setParameters(redpitaya, param_dict)
 	redpitaya.scpi.flashAllLED()
 	return redpitaya
-
-def openConnection(ip):
-	delimiter = '\r\n'
-	port = 5000
-	rm = visa.ResourceManager('@py')
-	rp_instrument = rm.open_resource('TCPIP::{}::{}::SOCKET'.format(ip, port), read_termination = delimiter)	
-	return rp_instrument
 
 def setParameters(redpitaya, param_dict):
 	redpitaya.setTrigDelay(param_dict['Trigger Delay Fraction'],p=True)
@@ -39,7 +31,7 @@ def setParameters(redpitaya, param_dict):
 	redpitaya.setDataFormat(param_dict['Acquisiton Format'],p=True)
 
 	redpitaya.trig_source = param_dict['Acquisition Trigger']
-	print('Trigger source set to {}'.format(redpitaya.trigger_source))
+	print('Trigger source set to {}'.format(redpitaya.trig_source))
 
 	redpitaya.stable_channel = param_dict['Stable Laser Channel']
 
@@ -56,6 +48,8 @@ def setParameters(redpitaya, param_dict):
 
 	initial_amplitude = 0.0
 	redpitaya.setOutputAmplitude(redpitaya.feedback_channel, initial_amplitude)
+
+	rp.error_scale = param_dict['Error Scale Factor']
 
 if __name__ == '__main__':
 	main(args.ip)
