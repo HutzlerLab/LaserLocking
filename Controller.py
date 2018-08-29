@@ -16,6 +16,7 @@ class ControllerClass:
 		self.redpitaya = initializeRP.main(ip, self.params)
 		self.pid = PID.PID()
 		self.pidON = False
+		self.error_sign = self.params['Error Sign']
 
 		self.clear()
 		self.figure = updateDisplay.initialize3Plots(self.redpitaya)

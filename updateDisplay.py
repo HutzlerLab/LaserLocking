@@ -4,6 +4,7 @@ matplotlib.use('TKagg')
 import matplotlib.pyplot as plt
 import numpy as np
 import time
+from analyzeData import gaussian
 
 def main(redpitaya, fig):
 	axes = fig.axes
@@ -82,9 +83,6 @@ def updateErrorData(axis,data, time_data):
 		
 	axis.relim()
 	axis.autoscale_view(True,True,True)
-
-def gaussian(x,a,b,n):
-	return n*np.exp(-(x-b)**2/(2*a))
 
 def convertFitToData(xscale, fit_params):
 	return gaussian(xscale,*fit_params)

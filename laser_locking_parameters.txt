@@ -14,3 +14,4 @@ Feedback Waveform	= DC
 Ramp Frequency (Hz)	= 42.1
 Set Point (V)		= 0.0
 Error Scale Factor	= 10
+Error Sign 		= Positive
