@@ -14,8 +14,9 @@ class ControllerClass:
 	def __init__(self,ip,param_dict):
 		self.params = param_dict
 		self.redpitaya = initializeRP.main(ip, self.params)
-		self.pid = PID.PID()
-		self.pidON = False
+		pid_info = self.getPIDParams()
+		self.pid = PID.PIDclass(P=self.pid_info[0], I=self.pid_info[1], D=self.pid_info[2], set_point=pid_info[3])
+		self.pidON = pid_info[4]
 		self.error_sign = self.params['Error Sign']
 
 		self.clear()
@@ -23,7 +24,7 @@ class ControllerClass:
 		self.redpitaya.enableOutput(self.redpitaya.feedback_channel)
 
 	@classmethod
-	def getParams(cls,ip,param_file='laser_locking_parameters.txt'):
+	def getParams(cls,ip,param_file='laser_locking_parameters.txt',pid_file='pid_parameters.txt'):
 		param_dict = {}
 		with open(param_file,'r') as f:
 			text = f.readlines()[1:]
@@ -42,7 +43,7 @@ class ControllerClass:
 		param_dict['Unstable Laser Channel'] = int(param_dict['Unstable Laser Channel'])
 		param_dict['Feedback Channel'] = int(param_dict['Feedback Channel'])
 		param_dict['Ramp Frequency'] = float(param_dict['Ramp Frequency'])
-		param_dict['Set Point'] = float(param_dict['Set Point'])
+#		param_dict['Set Point'] = float(param_dict['Set Point'])
 		param_dict['Error Scale Factor'] = float(param_dict['Error Scale Factor'])
 		return cls(ip,param_dict)
 
@@ -52,12 +53,42 @@ class ControllerClass:
 		self.avg_loop_time = 0
 		self.pid.clear()
 
+	def getPIDParams(self, file = 'pid_parameters.txt'):
+		parameters = []
+		with open(file,'r') as f:
+			text = f.readlines()[1:]
+			for line in text:
+				words = line.split('=')
+				param_value = words[1].strip('\n').strip()
+				if param_value == 'True':
+					parameters.append(True)
+				elif param_value == 'False':
+					parameters.append(False)
+				else:
+					parameters.append(float(param_value))
+		return parameters
+
+	def updatePIDParams(self):
+		frequency = 10
+		prev_status = self.pidON
+		if self.loop_iter%frequency ==0 and self.loop_iter > 0:
+			pid_info = self.getPIDParams()
+			self.pidON = parameters[4]
+			self.pid.Kp = parameters[0]
+			self.pid.Ki = parameters[1]
+			self.pid.Kd = parameters[2]
+			self.pid.set_point = parameters[3]
+			print('PID updated, ON = {}'.format(self.pidON))
+		if not self.pidON and prev_status:
+			self.pid.clear()
+
 	def controlLoop(self):
 		self.loop_begin = time.time()
 		redpitaya = self.redpitaya
 		try:
 			while(True):
 				loop_start = time.time()
+				self.updatePIDParams()
 				#self.pid.set_point = set_point_widget.value
 				#print(self.pid.set_point)
 				# Take data

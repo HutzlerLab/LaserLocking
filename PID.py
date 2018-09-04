@@ -1,8 +1,7 @@
 import time
 
 # PID controller class, written by Arian Jadbabaie
-
-class PID:
+class PIDclass:
 
 	def __init__(self, P=0.1, I=0, D=0, set_point=0):
 
