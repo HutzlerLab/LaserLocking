@@ -39,7 +39,7 @@ def setParameters(redpitaya, param_dict):
 	redpitaya.setDataFormat(param_dict['Acquisiton Format'],p=True)
 
 	redpitaya.trig_source = param_dict['Acquisition Trigger']
-	print('Trigger source set to {}'.format(redpitaya.trigger_source))
+	print('Trigger source set to {}'.format(redpitaya.trig_source))
 
 	redpitaya.stable_channel = param_dict['Stable Laser Channel']
 
