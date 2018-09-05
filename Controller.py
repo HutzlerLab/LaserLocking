@@ -7,6 +7,7 @@ import updateFeedback
 import updateDisplay
 import datetime
 import csv
+import pathlib
 
 
 class ControllerClass:
@@ -132,14 +133,19 @@ class ControllerClass:
 		redpitaya = self.redpitaya
 		redpitaya.stopAcquisition()
 		redpitaya.disableOutput(redpitaya.feedback_channel)
+		file = 'ErrorLogs'
 		name = 'Error_signal_'+datetime.datetime.today().strftime('%I%M%p_%Y%m%d')+'.csv'
 		title = 'Error Value'
-		with open(name,'w',newline='') as f:
+		path = pathlib.Path.cwd() / file
+		path.mkdir(exist_ok=True)
+		filename = file + '/' + name
+		with open(filename,'w',newline='') as f:
 			w = csv.writer(f)
 			w.writerow([title,"Time (s)"])
 			w.writerows(zip(redpitaya.error,redpitaya.error_time))
 		name = 'Stable_Mean_'+datetime.datetime.today().strftime('%I%M%p_%Y%m%d')+'.csv'
 		title = 'Mean Value'
+		filename = file + '/' + name
 		with open(name,'w',newline='') as f:
 			w = csv.writer(f)
 			w.writerow([title,"Time (s)"])
