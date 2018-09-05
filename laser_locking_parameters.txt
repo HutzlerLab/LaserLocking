@@ -12,5 +12,7 @@ Unstable Laser Channel  = 2
 Feedback Channel	= 1
 Feedback Waveform	= DC
 Ramp Frequency (Hz)	= 42.1
+Set Point (V)		= 0.0
 Error Scale Factor	= 10
 Error Sign 		= Positive
+Use Control		= True

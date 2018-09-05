@@ -16,9 +16,10 @@ class ControllerClass:
 		self.params = param_dict
 		self.redpitaya = initializeRP.main(ip, self.params)
 		pid_info = self.getPIDParams()
-		self.pid = PID.PIDclass(P=self.pid_info[0], I=self.pid_info[1], D=self.pid_info[2], set_point=pid_info[3])
+		self.pid = PID.PIDclass(P=pid_info[0], I=pid_info[1], D=pid_info[2], set_point=pid_info[3])
 		self.pidON = pid_info[4]
 		self.error_sign = self.params['Error Sign']
+		self.use_control = param_dict['Use Control']
 
 		self.clear()
 		self.figure = updateDisplay.initialize3Plots(self.redpitaya)
@@ -46,6 +47,10 @@ class ControllerClass:
 		param_dict['Ramp Frequency'] = float(param_dict['Ramp Frequency'])
 #		param_dict['Set Point'] = float(param_dict['Set Point'])
 		param_dict['Error Scale Factor'] = float(param_dict['Error Scale Factor'])
+		if param_dict['Use Control'] == 'True' or param_dict['Use Control'] == 'true'
+			param_dict['Use Control'] = True
+		else:
+			param_dict['Use Control'] = False
 		return cls(ip,param_dict)
 
 	def clear(self):
@@ -80,8 +85,10 @@ class ControllerClass:
 			self.pid.Kd = parameters[2]
 			self.pid.set_point = parameters[3]
 			print('PID updated, ON = {}'.format(self.pidON))
-		if not self.pidON and prev_status:
+		if not self.pidON and prev_status: #turning off should clear pid history
 			self.pid.clear()
+		if self.pidON and not prev_status #turning on should let user know values
+			print('PID initial parameters: \nP={}, I={}, D={} \nSet Point={}'.format(self.pid.Kp,self.pid.Ki,selfpid.Kd,self.pid.set_point))
 
 	def controlLoop(self):
 		self.loop_begin = time.time()

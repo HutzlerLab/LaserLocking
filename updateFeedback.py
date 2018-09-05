@@ -6,9 +6,13 @@ def main(controller):
 	if controller.error_sign == 'Negative':
 		error *= -1
 	calibration = 0.002
-	if controller.pidON:
-		pid = controller.pid
-		output_value = pid.update(error)
+
+	if controller.use_control:
+		if controller.pidON:
+			pid = controller.pid
+			output_value = pid.update(error)
+		else:
+			output_value = 0
 	else:
 		output_value = error - controller.pid.set_point # - redpitaya.amplitude_volts - calibration
 		output_value /= redpitaya.error_scale

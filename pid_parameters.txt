@@ -1,6 +1,6 @@
 PID Parameters
-P	= 
-I	= 
-D	= 
+P	= 0
+I	= 0
+D	= 0
 Set Pnt = 0.0
 PID on	= False

@@ -11,6 +11,7 @@ class PIDclass:
 		self.Ki = I
 		self.Kd = D
 		self.set_point = set_point
+		print('PID initial parameters: \nP={}, I={}, D={} \nSet Point={}'.format(self.Kp,self.Ki,self.Kd,self.set_point))
 		self.current_time = time.time()
 
 		# Initialize everything at 0
