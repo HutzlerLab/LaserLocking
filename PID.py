@@ -1,8 +1,8 @@
 import time
 
 # PID controller class, written by Arian Jadbabaie
-class PIDclass:
-
+class PIDclass(object): 
+	
 	def __init__(self, P=0.1, I=0, D=0, set_point=0):
 
 		# Initialize P, I, D values and set point. 
@@ -18,22 +18,22 @@ class PIDclass:
 		self.clear()
 
 		# Properties are useful for caculating quantities on the fly
-		@property
-		def delta_t(self):
-			# No time has elapsed for the first value
-			if self.first:
-				dt = 0
-			else:
-				dt = self.current_time - self.last_time
-			return dt
+	@property
+	def delta_t(self):
+		# No time has elapsed for the first value
+		if self.first:
+			dt = 0
+		else:
+			dt = self.current_time - self.last_time
+		return dt
 
-		@property
-		def delta_error(self):
-			return self.error - self.last_error
+	@property
+	def delta_error(self):
+		return self.error - self.last_error
 
-		@property
-		def feedback(self):
-			return self.Pterm + self.Iterm + self.Dterm
+	@property
+	def feedback(self):
+		return self.Pterm + self.Iterm + self.Dterm
 
 	# Clear function re-initializes everything
 	def clear(self):
@@ -64,7 +64,7 @@ class PIDclass:
 
 	# This function does the math
 	def calculateTerms(self):
-		self.Pterm = self.Kp * error
+		self.Pterm = self.Kp * self.error
 		self.Iterm += self.Ki * self.error * self.delta_t
 		# Don't divide by 0
 		if self.delta_t > 0:

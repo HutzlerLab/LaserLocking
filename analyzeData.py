@@ -6,11 +6,13 @@ import time
 
 ANALYSIS_SUCCESSFUL = True
 
-def main(redpitaya, loop_begin):
+def main(controller):
+	redpitaya = controller.redpitaya
+	loop_begin = controller.loop_begin
 	analysis_results = analyzeBothChannels(redpitaya)
 	if len(analysis_results) == 2:
 		redpitaya.fit_params = analysis_results
-		redpitaya.error.append(calculateError(redpitaya))
+		redpitaya.error.append(calculateError(controller))
 	else:
 		print("Error performing analysis")
 		if len(redpitaya.error) == 0:
@@ -46,7 +48,8 @@ def getVariance(single_fit_params):
 	variance = single_fit_params[0]
 	return variance
 
-def calculateError(redpitaya):
+def calculateError(controller):
+	redpitaya = controller.redpitaya
 	stable = redpitaya.stable_channel - 1
 	unstable = redpitaya.unstable_channel - 1
 	mean_stable = getMean(redpitaya.fit_params[stable])
@@ -54,6 +57,8 @@ def calculateError(redpitaya):
 	redpitaya.means[stable].append(mean_stable)
 	redpitaya.means[unstable].append(mean_unstable)
 	error = mean_stable - mean_unstable
+	#if controller.use_control:
+	#	error = error - controller.pid.set_point
 	max_error = redpitaya.ramp_time_ms
 	scaled_error = error/max_error
 	if abs(scaled_error) > 1:

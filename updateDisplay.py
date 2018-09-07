@@ -6,7 +6,9 @@ import numpy as np
 import time
 from analyzeData import gaussian
 
-def main(redpitaya, fig):
+def main(controller):
+	redpitaya = controller.redpitaya
+	fig = controller.figure
 	axes = fig.axes
 	xscale = redpitaya.time_scale
 	for ch in {1,2}:
@@ -16,7 +18,7 @@ def main(redpitaya, fig):
 		fit_gaussian = convertFitToData(xscale, fit_params)
 		updateCavityData(axis, cavity_data, fit_gaussian)
 
-	updateErrorData(axes[-1],redpitaya.error,redpitaya.error_time)
+	updateErrorData(axes[-1],controller)
 
 	fig.canvas.draw()
 	plt.tight_layout()
@@ -71,7 +73,9 @@ def updateCavityData(axis, data, fit_data):
 	axis.relim(True)
 	axis.autoscale_view(True, True, True)
 
-def updateErrorData(axis,data, time_data):
+def updateErrorData(axis,controller):
+	data = controller.redpitaya.error
+	time_data = controller.redpitaya.error_time
 	keep_values = 100
 	line = axis.get_lines()[0]
 	if len(data) > keep_values:

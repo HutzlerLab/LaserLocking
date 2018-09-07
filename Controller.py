@@ -18,6 +18,7 @@ class ControllerClass:
 		pid_info = self.getPIDParams()
 		self.pid = PID.PIDclass(P=pid_info[0], I=pid_info[1], D=pid_info[2], set_point=pid_info[3])
 		self.pidON = pid_info[4]
+		self.calibration = pid_info[5]
 		self.error_sign = self.params['Error Sign']
 		self.use_control = param_dict['Use Control']
 
@@ -47,7 +48,7 @@ class ControllerClass:
 		param_dict['Ramp Frequency'] = float(param_dict['Ramp Frequency'])
 #		param_dict['Set Point'] = float(param_dict['Set Point'])
 		param_dict['Error Scale Factor'] = float(param_dict['Error Scale Factor'])
-		if param_dict['Use Control'] == 'True' or param_dict['Use Control'] == 'true'
+		if param_dict['Use Control'] == 'True' or param_dict['Use Control'] == 'true':
 			param_dict['Use Control'] = True
 		else:
 			param_dict['Use Control'] = False
@@ -77,18 +78,30 @@ class ControllerClass:
 	def updatePIDParams(self):
 		frequency = 10
 		prev_status = self.pidON
+		before=[self.pid.Kp, self.pid.Ki, self.pid.Kd, self.pid.set_point]
 		if self.loop_iter%frequency ==0 and self.loop_iter > 0:
-			pid_info = self.getPIDParams()
+			before=[self.pid.Kp, self.pid.Ki, self.pid.Kd, self.pid.set_point]
+			parameters = self.getPIDParams()
 			self.pidON = parameters[4]
 			self.pid.Kp = parameters[0]
 			self.pid.Ki = parameters[1]
 			self.pid.Kd = parameters[2]
 			self.pid.set_point = parameters[3]
-			print('PID updated, ON = {}'.format(self.pidON))
+			self.calibration = parameters[5]
+			after = [self.pid.Kp, self.pid.Ki, self.pid.Kd, self.pid.set_point]
+			if before[0] != after[0]:
+				print('P=',after[0])
+			elif before[1] != after[1]:
+				print('I=',after[1])
+			elif before[2] != after[2]:
+				print('D=',after[2])
+			elif before[3] != after[3]:
+				print('Set Point=',after[3])
 		if not self.pidON and prev_status: #turning off should clear pid history
 			self.pid.clear()
-		if self.pidON and not prev_status #turning on should let user know values
-			print('PID initial parameters: \nP={}, I={}, D={} \nSet Point={}'.format(self.pid.Kp,self.pid.Ki,selfpid.Kd,self.pid.set_point))
+			print('PID OFF')
+		if self.pidON and not prev_status: #turning on should let user know values
+			print('PID ON')
 
 	def controlLoop(self):
 		self.loop_begin = time.time()
@@ -105,13 +118,13 @@ class ControllerClass:
 				# Trigger received
 				if acquisition_successful:
 					# Analyze data
-					analyzeData.main(redpitaya, self.loop_begin)
+					analyzeData.main(self)
 
 					# Update feedback
 					updateFeedback.main(self)
 
 					# Update display
-					updateDisplay.main(redpitaya, self.figure)
+					updateDisplay.main(self)
 
 					# Timing
 					loop_end = time.time()
@@ -139,6 +152,7 @@ class ControllerClass:
 	def stopRP(self):
 		redpitaya = self.redpitaya
 		redpitaya.stopAcquisition()
+		redpitaya.setOutputOffset(redpitaya.feedback_channel, self.calibration)
 		redpitaya.disableOutput(redpitaya.feedback_channel)
 		file = 'ErrorLogs'
 		name = 'Error_signal_'+datetime.datetime.today().strftime('%I%M%p_%Y%m%d')+'.csv'
@@ -153,7 +167,7 @@ class ControllerClass:
 		name = 'Stable_Mean_'+datetime.datetime.today().strftime('%I%M%p_%Y%m%d')+'.csv'
 		title = 'Mean Value'
 		filename = file + '/' + name
-		with open(name,'w',newline='') as f:
+		with open(filename,'w',newline='') as f:
 			w = csv.writer(f)
 			w.writerow([title,"Time (s)"])
 			w.writerows(zip(redpitaya.means[0], redpitaya.error_time))
