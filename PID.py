@@ -2,7 +2,7 @@ import time
 
 # PID controller class, written by Arian Jadbabaie
 class PIDclass(object): 
-	
+
 	def __init__(self, P=0.1, I=0, D=0, set_point=0):
 
 		# Initialize P, I, D values and set point. 
@@ -41,6 +41,7 @@ class PIDclass(object):
 		self.Iterm = 0
 		self.Dterm = 0
 		self.error = 0
+		self.last_time=self.current_time
 		self.last_error = 0
 		self.first = True
 		self.feedback_history = [[],[]]
@@ -60,12 +61,19 @@ class PIDclass(object):
 
 		# Store time in memory for next iteration
 		self.last_time = self.current_time
+
+		#No longer first
+		if self.first:
+			self.first = False
+			
 		return self.feedback
 
 	# This function does the math
 	def calculateTerms(self):
 		self.Pterm = self.Kp * self.error
 		self.Iterm += self.Ki * self.error * self.delta_t
+		print("Iterm = ",self.Iterm)
+		print("Ki = {}. Error = {}. Deltat = ")
 		# Don't divide by 0
 		if self.delta_t > 0:
 			self.Dterm = self.delta_error/self.delta_t
