@@ -65,15 +65,13 @@ class PIDclass(object):
 		#No longer first
 		if self.first:
 			self.first = False
-			
+
 		return self.feedback
 
 	# This function does the math
 	def calculateTerms(self):
 		self.Pterm = self.Kp * self.error
 		self.Iterm += self.Ki * self.error * self.delta_t
-		print("Iterm = ",self.Iterm)
-		print("Ki = {}. Error = {}. Deltat = ")
 		# Don't divide by 0
 		if self.delta_t > 0:
 			self.Dterm = self.delta_error/self.delta_t
