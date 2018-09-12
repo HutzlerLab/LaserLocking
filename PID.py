@@ -57,7 +57,7 @@ class PIDclass(object):
 		self.calculateTerms()
 
 		# Record feedback signal for plotting later
-		self.storeHistory()
+		#self.storeHistory()
 
 		# Store time in memory for next iteration
 		self.last_time = self.current_time
@@ -65,7 +65,6 @@ class PIDclass(object):
 		#No longer first
 		if self.first:
 			self.first = False
-
 		return self.feedback
 
 	# This function does the math
@@ -74,7 +73,7 @@ class PIDclass(object):
 		self.Iterm += self.Ki * self.error * self.delta_t
 		# Don't divide by 0
 		if self.delta_t > 0:
-			self.Dterm = self.delta_error/self.delta_t
+			self.Dterm = self.Kd* self.delta_error/self.delta_t
 
 	# Store feedback history in lists
 	def storeHistory(self):
