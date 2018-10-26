@@ -171,3 +171,10 @@ class ControllerClass:
 			w = csv.writer(f)
 			w.writerow([title,"Time (s)"])
 			w.writerows(zip(redpitaya.means[0], redpitaya.error_time))
+		name = 'Unstable_Mean_'+datetime.datetime.today().strftime('%I%M%p_%Y%m%d')+'.csv'
+		title = 'Mean Value'
+		filename = file + '/' + name
+		with open(filename,'w',newline='') as f:
+			w = csv.writer(f)
+			w.writerow([title,"Time (s)"])
+			w.writerows(zip(redpitaya.means[1], redpitaya.error_time))			
