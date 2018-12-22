@@ -106,6 +106,7 @@ class ControllerClass:
 	def controlLoop(self):
 		self.loop_begin = time.time()
 		redpitaya = self.redpitaya
+		display_period = 3
 		try:
 			while(True):
 				loop_start = time.time()
@@ -124,8 +125,8 @@ class ControllerClass:
 					updateFeedback.main(self)
 
 					# Update display
-					updateDisplay.main(self)
-
+					if self.loop_iter % display_period == 0:
+						updateDisplay.main(self)
 					# Timing
 					loop_end = time.time()
 					loop_time = loop_end - loop_start

@@ -65,25 +65,22 @@ class RedPitaya:
     @property
     def time_scale(self):
         return np.linspace(0,self.ramp_time_ms,self.ramp_samples)
-    
+
 
 # General commands
     def closeConnection(self):
-        self.scpi.turnOffAllLED()
         self.scpi.close()
         print('Connection closed.')
 
 # Acquisition commands
     def startAcquisition(self, p=False):
         self.scpi.startAcq()
-        self.scpi.turnOnLED(7)
         if p:
             print('Acquisition started.')
         time.sleep(self.buff_time_ms*0.001)
 
     def stopAcquisition(self, p=False):
         self.scpi.stopAcq()
-        self.scpi.turnOffLED(7)
         if p:
             print('Acquisition stopped.')
 
@@ -119,7 +116,7 @@ class RedPitaya:
         if p:
             print('Averaging is {}'.format(self.avg))
         return self.avg
-    
+
     def setInputGain(self,gain,channel,p=False):
         bad = False
         if gain == 'HV':
@@ -154,23 +151,18 @@ class RedPitaya:
             print('Trigger level is {} mV'.format(self.trig_level))
 
     def runTriggerLoop(self,timeout=10,p=False):
-        self.scpi.turnOnLED(5)
         start = time.time()
         while True:
             self.trig_status = self.scpi.getTrigStatus()
-            elapsed = time.time()-start 
+            elapsed = time.time()-start
 
             if self.trig_status == 'TD':
-                self.scpi.turnOffLED(5)
                 if p:
                     print('Triggered')
                 return True
 
             elif elapsed > timeout:
                 self.trig_status = None
-                self.scpi.turnOffLED(5)
-                self.scpi.turnOnLED(0)
-                self.scpi.turnOnLED(1)
                 print('Trigger timed out after {} seconds'.format(timeout))
                 return False
 
@@ -215,7 +207,7 @@ class RedPitaya:
     def getAllRawData(self, channel):
         raw_data = self.scpi.getAllRawData(channel)
         return raw_data
- 
+
     def processASCIIDataVolts(self, raw_data):
         stripped_data = raw_data.strip('{}\n\r').replace("  ", "").split(',')
         data_array = np.fromiter(stripped_data, float)
@@ -226,36 +218,30 @@ class RedPitaya:
     def testGetASCIIData(self, channel):
         data_array = self.scpi.getASCIIData(channel)
         return data_array
-        
+
     # Not Working
     def testGetBINData(self, channel):
         data_array = self.scpi.getBINData(channel)
         return data_array
 
     def getAllProcessedData(self,channel):
-        self.scpi.turnOnLED(6)
         raw_data = self.scpi.getAllRawData(channel)
         if self.data_format=='ASCII' and self.data_units=='VOLTS':
             data_array = self.processASCIIDataVolts(raw_data)
-        self.scpi.turnOffLED(6)
         return data_array
 
     def getLateProcessedData(self,channel):
-        self.scpi.turnOnLED(6)
         samples = self.ramp_samples
         raw_data = self.scpi.getLateRawData(channel, samples)
         if self.data_format=='ASCII' and self.data_units=='VOLTS':
             data_array = self.processASCIIDataVolts(raw_data)
-        self.scpi.turnOffLED(6)
         return data_array
 
     def getEarlyProcessedData(self,channel):
-        self.scpi.turnOnLED(6)
         samples = self.ramp_samples
         raw_data = self.scpi.getEarlyRawData(channel, samples)
         if self.data_format=='ASCII' and self.data_units=='VOLTS':
             data_array = self.processASCIIDataVolts(raw_data)
-        self.scpi.turnOffLED(6)
         return data_array
 
 # Output commands
@@ -284,12 +270,10 @@ class RedPitaya:
 
     def enableOutput(self, channel,p=False):
         self.scpi.enableOutput(channel)
-        self.scpi.turnOnLED(4)
         if p:
             print('Output {} enabled.'.format(channel))
 
     def disableOutput(self,channel,p=False):
         self.scpi.disableOutput(channel)
-        self.scpi.turnOffLED(4)
         if p:
             print('Output {} disabled.'.format(channel))
