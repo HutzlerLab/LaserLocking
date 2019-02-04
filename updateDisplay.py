@@ -53,7 +53,10 @@ def initialize3Plots(redpitaya):
 	error_ax = fig.add_subplot(313)
 	error_ax.set_xlabel('Time (s)')
 	error_ax.set_ylabel('Output {} (V)'.format(redpitaya.feedback_channel))
-	error_ax.set_title('Error')
+	if controller.use_control:
+		error_ax.set_title('Control Signal')
+	else:
+		error_ax.set_title('Error Signal')
 	line_error, = error_ax.plot(error_xdata,error_ydata)
 
 	fig.canvas.draw()
@@ -67,7 +70,7 @@ def closeAll():
 def updateCavityData(axis, data, fit_data):
 	lines = axis.get_lines()
 	line_fit = lines[0]
-	line_data = lines[1]	
+	line_data = lines[1]
 	line_data.set_ydata(data)
 	line_fit.set_ydata(fit_data)
 	axis.relim(True)
@@ -84,7 +87,7 @@ def updateErrorData(axis,controller):
 	else:
 		line.set_ydata(data)
 		line.set_xdata(time_data)
-		
+
 	axis.relim()
 	axis.autoscale_view(True,True,True)
 
