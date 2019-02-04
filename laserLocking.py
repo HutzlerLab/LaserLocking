@@ -7,7 +7,7 @@ to control the lock by modifying and saving the text fileself.
 To work with Jupyter notebook, this code uses tkinter to display
 plots in a separate window.
 
-Work in progress by Arian Jadbabaie
+Work in progress by Arian Jadbabaie. arianjad@gmail.com
 '''
 
 import time
