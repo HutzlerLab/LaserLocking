@@ -1,0 +1,18 @@
+Laser Locking Parameters
+Trigger Delay Fraction	= 0.0
+Trigger Level (mV)	= 500
+Gain1			= LV
+Gain2			= LV
+Averaging		= OFF
+Acquisition Units	= VOLTS
+Acquisition Format	= ASCII
+Acquisition Trigger	= EXT_NE
+Stable Laser Channel 	= 1
+Unstable Laser Channel  = 2
+Feedback Channel	= 1
+Feedback Waveform	= DC
+Ramp Frequency (Hz)	= 41.1
+Set Point (V)		= 0.0
+Error Scale Factor	= 1
+Error Sign 		= Positive
+Use Control		= True

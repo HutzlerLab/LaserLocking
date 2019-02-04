@@ -1,71 +1,25 @@
-# Initialize and lock laser
+'''
+This is the main function for locking a laser using a Red Pitaya (RP).
+To run the program, execute laserLocking.main(ip). This will initialize
+the RP using the file "laser_locking_parameters.txt". Use that text file
+to control the lock by modifying and saving the text fileself.
 
-import sys
+To work with Jupyter notebook, this code uses tkinter to display
+plots in a separate window.
+
+Work in progress by Arian Jadbabaie
+'''
+
 import time
-import csv
-import datetime
-import initializeRP
-import takeData
-import analyzeData
-import updateFeedback
-import updateDisplay
+from Controller import ControllerClass
 
+'''Initialize RP, run control loop'''
 def main(ip, param_file='laser_locking_parameters.txt'):
-	# Start/open communitation channel to Red Pitaya
-	# Set parameters
-	redpitaya = initializeRP.main(ip, param_file)
 
-	# Initialize plotting
-	figure = updateDisplay.initialize3Plots(redpitaya)
+	# Initialize controller class instance used to handle parameters and run loop
+	controller = ControllerClass.getParams(ip, param_file)
 
-	# Start output at some value (usually 0).
-	redpitaya.enableOutput(redpitaya.feedback_channel)
-
-	# Timing
-	i=0
-	avg_loop_time = 0
-	loop_begin = time.time()
-	# Lock the laser in a loop. Exit loop with CTRL+C
-	try:
-		while(True):
-			loop_start = time.time()
-			# Take data
-			acquisition_successful = takeData.main(redpitaya)
-
-			# Trigger received
-			if acquisition_successful:
-				# Analyze data
-				analyzeData.main(redpitaya, loop_begin)
-
-				# Update feedback
-				updateFeedback.main(redpitaya)
-
-				# Update display
-				updateDisplay.main(redpitaya, figure)
-
-				# Timing
-				i+=1
-				loop_end = time.time()
-				loop_time = loop_end - loop_start
-				avg_loop_time+=loop_time
-			# No trigger
-			else:
-				stopRP(redpitaya)
-				redpitaya.closeConnection()
-				updateDisplay.closeAll()
-				print('No trigger was detected so acquisition was stopped, the program was aborted, and the connection was closed.')
-				break
-
-	# Escape loop with interrupt
-	except KeyboardInterrupt:
-		stopRP(redpitaya,avg_loop_time)
-		redpitaya.closeConnection()
-		updateDisplay.closeAll()
-		print('Program stopped.')
-		print('Average loop time was {} seconds.'.format(avg_loop_time/i))
-		pass
-
-
+<<<<<<< HEAD
 # Stop acquisition and output
 def stopRP(redpitaya,avg_loop_time):
 	redpitaya.stopAcquisition()
@@ -82,3 +36,7 @@ def stopRP(redpitaya,avg_loop_time):
 		w = csv.writer(f)
 		w.writerow([title,"Time (s)"])
 		w.writerows(zip(redpitaya.means[0], redpitaya.error_time))
+=======
+	# Run control loop indefinitely until the kernel is stopped
+	controller.controlLoop()
+>>>>>>> dev

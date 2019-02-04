@@ -4,8 +4,11 @@ matplotlib.use('TKagg')
 import matplotlib.pyplot as plt
 import numpy as np
 import time
+from analyzeData import gaussian
 
-def main(redpitaya, fig):
+def main(controller):
+	redpitaya = controller.redpitaya
+	fig = controller.figure
 	axes = fig.axes
 	xscale = redpitaya.time_scale
 	for ch in {1,2}:
@@ -15,7 +18,7 @@ def main(redpitaya, fig):
 		fit_gaussian = convertFitToData(xscale, fit_params)
 		updateCavityData(axis, cavity_data, fit_gaussian)
 
-	updateErrorData(axes[-1],redpitaya.error,redpitaya.error_time)
+	updateErrorData(axes[-1],controller)
 
 	fig.canvas.draw()
 	plt.tight_layout()
@@ -50,7 +53,10 @@ def initialize3Plots(redpitaya):
 	error_ax = fig.add_subplot(313)
 	error_ax.set_xlabel('Time (s)')
 	error_ax.set_ylabel('Output {} (V)'.format(redpitaya.feedback_channel))
-	error_ax.set_title('Error')
+	if controller.use_control:
+		error_ax.set_title('Control Signal')
+	else:
+		error_ax.set_title('Error Signal')
 	line_error, = error_ax.plot(error_xdata,error_ydata)
 
 	fig.canvas.draw()
@@ -64,13 +70,15 @@ def closeAll():
 def updateCavityData(axis, data, fit_data):
 	lines = axis.get_lines()
 	line_fit = lines[0]
-	line_data = lines[1]	
+	line_data = lines[1]
 	line_data.set_ydata(data)
 	line_fit.set_ydata(fit_data)
 	axis.relim(True)
 	axis.autoscale_view(True, True, True)
 
-def updateErrorData(axis,data, time_data):
+def updateErrorData(axis,controller):
+	data = controller.redpitaya.error
+	time_data = controller.redpitaya.error_time
 	keep_values = 100
 	line = axis.get_lines()[0]
 	if len(data) > keep_values:
@@ -79,12 +87,9 @@ def updateErrorData(axis,data, time_data):
 	else:
 		line.set_ydata(data)
 		line.set_xdata(time_data)
-		
+
 	axis.relim()
 	axis.autoscale_view(True,True,True)
-
-def gaussian(x,a,b,n):
-	return n*np.exp(-(x-b)**2/(2*a))
 
 def convertFitToData(xscale, fit_params):
 	return gaussian(xscale,*fit_params)
