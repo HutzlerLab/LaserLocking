@@ -40,7 +40,7 @@ class ControllerClass:
 		self.clear()
 
 		# Initialize plotting
-		self.figure = updateDisplay.initialize3Plots(self.redpitaya)
+		self.figure = updateDisplay.initialize3Plots(self)
 		self.redpitaya.enableOutput(self.redpitaya.feedback_channel)
 
 
@@ -131,7 +131,7 @@ class ControllerClass:
 		redpitaya = self.redpitaya
 
 		# display_period sets how many loops execute before the program updates the display plots
-		display_period = 3
+		display_period = 2
 		try:
 			while(True):
 				loop_start = time.time()

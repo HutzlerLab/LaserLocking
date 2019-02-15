@@ -26,7 +26,8 @@ def main(controller):
 
 
 
-def initialize3Plots(redpitaya):
+def initialize3Plots(controller):
+	redpitaya = controller.redpitaya
 	fig = plt.figure()
 
 	time_xdata = redpitaya.time_scale

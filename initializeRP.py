@@ -36,7 +36,7 @@ def setParameters(redpitaya, param_dict):
 
 	redpitaya.setDataUnits(param_dict['Acquisition Units'],p=True)
 
-	redpitaya.setDataFormat(param_dict['Acquisiton Format'],p=True)
+	redpitaya.setDataFormat(param_dict['Acquisition Format'],p=True)
 
 	redpitaya.trig_source = param_dict['Acquisition Trigger']
 	print('Trigger source set to {}'.format(redpitaya.trig_source))
