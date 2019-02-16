@@ -24,11 +24,13 @@ class ControllerClass:
 		self.params = param_dict
 
 		# Initialize Red Pitaya
-		self.redpitaya = initializeRP.main(ip, self.params)
+		self.rp = Redpitaya.initialize(ip,self.params)
+		#self.redpitaya = initializeRP.main(ip, self.params)
 
 		# Initialize PID control
 		pid_info = self.getPIDParams()
-		self.pid = PID.PIDclass(P=pid_info[0], I=pid_info[1], D=pid_info[2], set_point=pid_info[3])
+		self.pid = RPclass.PID(pid_info)
+		PID.PIDclass(P=pid_info[0], I=pid_info[1], D=pid_info[2], set_point=pid_info[3])
 		self.pidON = pid_info[4]
 		self.calibration = pid_info[5]
 		self.error_sign = self.params['Error Sign']
@@ -41,7 +43,7 @@ class ControllerClass:
 
 		# Initialize plotting
 		self.figure = updateDisplay.initialize3Plots(self)
-		self.redpitaya.enableOutput(self.redpitaya.feedback_channel)
+		#self.redpitaya.enableOutput(self.redpitaya.feedback_channel)
 
 
 	'''Method for reading parameters from text file, populating dictionary,
