@@ -3,5 +3,3 @@
 *.pyc
 __pycache__
 *.csv
-ErrorLogs
-pid_parameters.txt

@@ -79,6 +79,7 @@ class RedPitaya:
     def time_scale(self):
         return np.linspace(0,self.ramp_time_ms,self.ramp_samples)
 
+    @property
 
 # General commands
     def closeConnection(self):
