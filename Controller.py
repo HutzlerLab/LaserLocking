@@ -1,4 +1,4 @@
-'''
+gi'''
 Code for the controller class, which runs the locking loop, handles UI via
 text file, and communicates with Red Pitaya.
 '''
