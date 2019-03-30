@@ -3,7 +3,8 @@ Code for the controller class, which runs the locking loop, handles UI via
 text file, and communicates with Red Pitaya.
 '''
 
-
+import os
+os.environ['FOR_DISABLE_CONSOLE_CTRL_HANDLER'] = 'T'
 import time
 import PID
 import initializeRP
@@ -132,8 +133,8 @@ class ControllerClass:
 
 		# display_period sets how many loops execute before the program updates the display plots
 		display_period = 2
-		try:
-			while(True):
+		while(True):
+			try:
 				loop_start = time.time()
 
 				# Update PID
@@ -169,15 +170,15 @@ class ControllerClass:
 					print('No trigger was detected so acquisition was stopped, the program was aborted, and the connection was closed.')
 					break
 
-		# Escape loop with interrupt
-		except KeyboardInterrupt:
-			self.stopRP()
-			self.redpitaya.closeConnection()
-			updateDisplay.closeAll()
-			print('Program stopped.')
-			if self.loop_iter > 0:
-				print('Average loop time was {} seconds.'.format(self.avg_loop_time/self.loop_iter))
-			pass
+			# Escape loop with interrupt
+			except KeyboardInterrupt:
+				self.stopRP()
+				self.redpitaya.closeConnection()
+				updateDisplay.closeAll()
+				print('Program stopped.')
+				if self.loop_iter > 0:
+					print('Average loop time was {} seconds.'.format(self.avg_loop_time/self.loop_iter))
+				break
 
 	'''If stopped with a keyboard interrupt, this function allows the
 	controller to save a log with information abotu the error signal and

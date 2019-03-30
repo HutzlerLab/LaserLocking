@@ -23,6 +23,7 @@ def main(controller):
 	fig.canvas.draw()
 	plt.tight_layout()
 	fig.canvas.flush_events()
+	return
 
 
 
@@ -63,6 +64,7 @@ def initialize3Plots(controller):
 	fig.canvas.draw()
 	plt.tight_layout()
 	fig.canvas.flush_events()
+	plt.show(block=False)
 	return fig
 
 def closeAll():
