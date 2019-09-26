@@ -1,4 +1,4 @@
-gi'''
+'''
 Code for the controller class, which runs the locking loop, handles UI via
 text file, and communicates with Red Pitaya.
 '''
@@ -25,7 +25,6 @@ class ControllerClass:
 
 		# Initialize Red Pitaya
 		self.rp = Redpitaya.initialize(ip,self.params)
-		#self.redpitaya = initializeRP.main(ip, self.params)
 
 		# Initialize PID control
 		pid_info = self.getPIDParams()

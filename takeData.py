@@ -3,7 +3,7 @@
 def main(redpitaya, timeout=10):
 	redpitaya.startAcquisition()
 	redpitaya.setTrigSource(redpitaya.trig_source)
-	if waitForTrigger(redpitaya, timeout) == True:
+	if waitForTrigger(redpitaya, timeout):
 		redpitaya.data = readBothChannels(redpitaya)
 		return True
 	else:
@@ -25,5 +25,3 @@ def readSingleChannel(redpitaya,channel):
 def waitForTrigger(redpitaya, timeout=10):
 	trig_result = redpitaya.runTriggerLoop()
 	return trig_result
-
-

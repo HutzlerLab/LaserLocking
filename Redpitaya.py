@@ -8,14 +8,15 @@ from pyrpl import Pyrpl
 class RedPitaya:
 
     def __init__(self, rp_pyrpl, rp_scpi):
-        self.pyrpl = rp_pyrpl
-        self.scpi = SCPI(rp_scpi)
+        self.rp = rp_pyrpl
         self.scope = rp_pyrpl.scope
-        self.asg1 = 
-        self.scpi.disableOutput(1)
-        self.scpi.disableOutput(2)
-        self.scpi.resetAcq()
-        self.scpi.resetOutput()
+        self.asg = [rp_pyrpl.asg0,rp_pyrpl.asg1]
+        self.pid = [rp_pyrpl.pid0,rp_pyrpl.pid1,rp_pyrpl.pid2]
+
+        # self.scpi.disableOutput(1)
+        # self.scpi.disableOutput(2)
+        # self.scpi.resetAcq()
+        # self.scpi.resetOutput()
 
     # Acquisition attributes
         self.avg = self.scpi.getAvgStatus()
@@ -46,18 +47,11 @@ class RedPitaya:
         self.offset_volts = 0
         self.error_scale = 1
 
-    # Finished initializing
-        self.scpi.flashAllLED()
-
     @classmethod
     def initializeRP(cls,ip):
     	pyrpl_object = Pyrpl(config='global_config',hostname=ip)
         rp_pyrpl = pyrpl_object.rp
-        delimiter = '\r\n'
-        port = 5000
-        rm = visa.ResourceManager('@py')
-        rp_scpi = rm.open_resource('TCPIP::{}::{}::SOCKET'.format(ip, port), read_termination = delimiter)
-    	return cls(rp_pyrpl,rp_scpi)
+    	return cls(rp_pyrpl)
 
     @property
     def buff_time_ms(self):
@@ -74,12 +68,21 @@ class RedPitaya:
 
 # General commands
     def closeConnection(self):
-        self.scpi.close()
+        self.rp._clear()
         print('Connection closed.')
 
+    def setup_scope(self):
+        s = self.scope
+        s.input1 = 'in1'
+        s.input2 = 'in2'
+        s.trigger_source = 'EXT_NE'
+
+
+
 # Acquisition commands
-    def startAcquisition(self, p=False):
-        self.scpi.startAcq()
+    def startAcquisition(self,input, p=False):
+        s = self.scope
+
         if p:
             print('Acquisition started.')
         time.sleep(self.buff_time_ms*0.001)
