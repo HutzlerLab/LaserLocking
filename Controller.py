@@ -188,6 +188,7 @@ class ControllerClass:
 		redpitaya.stopAcquisition()
 		redpitaya.setOutputOffset(redpitaya.feedback_channel, self.calibration)
 		redpitaya.disableOutput(redpitaya.feedback_channel)
+		absolute_time = [t + self.loop_begin for t in redpitaya.error_time]
 		file = 'ErrorLogs'
 		name = 'Error_signal_'+datetime.datetime.today().strftime('%I%M%p_%Y%m%d')+'.csv'
 		title = 'Error Value'
@@ -197,11 +198,11 @@ class ControllerClass:
 		with open(filename,'w',newline='') as f:
 			w = csv.writer(f)
 			w.writerow([title,"Time (s)"])
-			w.writerows(zip(redpitaya.error,redpitaya.error_time+self.loop_begin))
+			w.writerows(zip(redpitaya.error,absolute_time))
 		name = 'Stable_Mean_'+datetime.datetime.today().strftime('%I%M%p_%Y%m%d')+'.csv'
 		title = 'Mean Value'
 		filename = file + '/' + name
 		with open(filename,'w',newline='') as f:
 			w = csv.writer(f)
 			w.writerow([title,"Time (s)"])
-			w.writerows(zip(redpitaya.means[0], redpitaya.error_time+self.loop_begin))
+			w.writerows(zip(redpitaya.means[0], absolute_time))
