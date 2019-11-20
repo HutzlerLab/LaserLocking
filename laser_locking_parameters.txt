@@ -1,5 +1,5 @@
 Laser Locking Parameters
-IP			= 131.215.112.234
+IP			= 131.215.112.7
 Trigger Delay Fraction	= 0.0
 Trigger Level (mV)	= 500
 Gain1			= LV

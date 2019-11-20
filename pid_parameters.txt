@@ -1,7 +1,7 @@
 PID Parameters
-P	= 0.06
-I	= 0.06
+P	= 0.01
+I	= 0.03
 D	= 0.00
-Set Pnt = -0.31
+Set Pnt = 0.025
 PID on	= False
 Calib	= 0.002
