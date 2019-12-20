@@ -31,13 +31,20 @@ def gaussian(x,a,b,n,c):
 
 def fitGaussian(xscale, data, guess, length):
 	global ANALYSIS_SUCCESSFUL
+	bounds = ([0,-1.1*length,0,0],[length**2,1.1*length,10,0.1])
 	try:
-		popt, pcov = curve_fit(gaussian, xscale, data, p0=guess, bounds=([0,-1.1*length,0,0],[length**2,1.1*length,10,0.1]),ftol=1e-3,xtol=1e-3) #bounds=([0,-3*length,0],[3*length**2,3*length,10]))
+		popt, pcov = curve_fit(gaussian, xscale, data, p0=guess, bounds=bounds,ftol=1e-3,xtol=1e-3) #bounds=([0,-3*length,0],[3*length**2,3*length,10]))
 		ANALYSIS_SUCCESSFUL = True
 		return [popt,pcov]
 	except RuntimeError:
 		print("Error - curve_fit failed")
 		ANALYSIS_SUCCESSFUL = False
+		return [[],[]]
+	except ValueError:
+		print("Error - guess is outside of bounds")
+		ANALYSIS_SUCCESSFUL = False
+		print("Guess: ",guess)
+		print("Bounds: ",bounds)
 		return [[],[]]
 
 def getMean(single_fit_params):
@@ -81,6 +88,8 @@ def analyzeBothChannels(redpitaya):
 def makeGuess(redpitaya, data):
 	finesse = 123
 	max_guess = np.amax(data)
+	if max_guess<0:
+		max_guess=0
 	mean_guess = np.argmax(data)/redpitaya.ramp_samples*redpitaya.ramp_time_ms
 	var_guess = (redpitaya.ramp_time_ms/finesse)**2
 	offset_guess = 0
